@@ -7,8 +7,8 @@ export default function PackingSection() {
   const [items, setItems] = useState<BeachItem[]>([
     { id: '1', name: 'Boogie Board 🌊', packed: false, required: false, icon: '🏄‍♀️' },
     { id: '2', name: 'Sunscreen', packed: false, required: true, icon: '🧴' },
-    { id: '3', name: 'Warm Jacket or Hoodie for the evening breeze 🌅', packed: false, required: true, icon: '🧥' },
-    { id: '4', name: 'Beach Towel', packed: false, required: true, icon: '🧣' },
+    { id: '3', name: 'Warmer layer for the evening breeze 🌅', packed: false, required: true, icon: '🧥' },
+    { id: '4', name: 'Beach Towel', packed: false, required: true, icon: '🏖️ ' },
     { id: '5', name: 'Swimwear', packed: false, required: true, icon: '🩳' },
     { id: '6', name: 'A dry change of clothes', packed: false, required: true, icon: '👕' },
     { id: '7', name: 'Appetite for burgers and s\'mores! 🍔', packed: false, required: true, icon: '🍫' },
@@ -37,7 +37,7 @@ export default function PackingSection() {
 
   return (
     <div className="flex flex-col gap-3">
-    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative rotate-[0.5deg]">
+    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative">
       <div>
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#CAF0F8] text-[#0077B6] mb-3">
           <Waves className="w-3.5 h-3.5" /> JASMINE'S BEACH PACKER

@@ -16,7 +16,7 @@ export default function MapSection() {
   };
 
   return (
-    <div id="map-section-card" className="bg-white/95 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 md:gap-8 rotate-[0.5deg]">
+    <div id="map-section-card" className="bg-white/95 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 md:gap-8">
       {/* Search & Intro */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 pb-2">
         <div>

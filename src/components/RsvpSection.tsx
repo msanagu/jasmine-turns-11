@@ -106,7 +106,7 @@ export default function RsvpSection() {
   return (
     <div className="grid lg:grid-cols-12 gap-8 items-stretch">
       {/* RSVP Form Column */}
-      <div className="lg:col-span-12 xl:col-span-5 bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative rotate-[-0.5deg]">
+      <div className="lg:col-span-12 xl:col-span-5 bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative">
         <div>
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#CAF0F8] text-[#0077B6] mb-3">
             <Calendar className="w-3.5 h-3.5" /> RSVP BOARD
@@ -329,7 +329,7 @@ export default function RsvpSection() {
       {/* Guest blanket quilt column */}
       <div className="lg:col-span-12 xl:col-span-7 flex flex-col gap-6 h-full justify-between">
         {/* Beach quilt of guests */}
-        <div className="bg-white/95 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 flex flex-col gap-4 relative z-10 flex-1 min-h-[350px] rotate-[0.5deg]">
+        <div className="bg-white/95 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 flex flex-col gap-4 relative z-10 flex-1 min-h-[350px]">
           <div className="flex items-center justify-between border-b border-gray-100 pb-2">
             <h4 className="font-sans font-black text-lg text-[#1D4E89] tracking-tight flex items-center gap-2">
               🌞 Attendees Board

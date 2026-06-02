@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 
 export default function BeachGraphics() {
@@ -21,15 +20,16 @@ export default function BeachGraphics() {
         </svg>
       </motion.div>
 
-      {/* Decorative palm leaf silhouettes in top right */}
-      <motion.div 
-        className="absolute top-[-20px] right-[-20px] w-64 h-64 text-teal-600/8 origin-top-right scale-x-[-1]"
-        animate={{ rotate: [-3, 3, -3] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      {/* Larger palm leaf cluster — middle-right of hero, convergence point pushed off-screen */}
+      <motion.div
+        className="absolute top-[340px] right-[-160px] w-80 h-80 text-teal-600/10 origin-top-right"
+        animate={{ rotate: [-2, 4, -2] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
       >
         <svg viewBox="0 0 100 100" fill="currentColor" className="w-full h-full">
-          <path d="M10,10 Q30,15 50,40 Q60,50 70,80 Q50,70 40,50 Q20,30 10,10" />
-          <path d="M10,10 Q40,10 65,30 Q80,45 90,75 Q70,60 55,45 Q30,25 10,10" />
+          <path d="M90,10 Q70,15 50,40 Q40,50 30,80 Q50,70 60,50 Q80,30 90,10" />
+          <path d="M90,10 Q60,10 35,30 Q20,45 10,75 Q30,60 45,45 Q70,25 90,10" />
+          <path d="M90,10 Q85,40 65,65 Q50,80 20,90 Q35,70 50,55 Q70,30 90,10" />
         </svg>
       </motion.div>
 

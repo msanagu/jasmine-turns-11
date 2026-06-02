@@ -307,7 +307,7 @@ const SoundGenerator = forwardRef<SoundGeneratorHandle, {}>(function SoundGenera
   }, []);
 
   return (
-    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-4xl p-6 max-w-sm mx-auto flex flex-col gap-4 rotate-[-0.5deg]">
+    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-4xl p-6 max-w-sm mx-auto flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <div className="p-2.5 bg-[#CAF0F8] rounded-xl text-[#0077B6]">
           <Music className="w-5 h-5 animate-pulse" />

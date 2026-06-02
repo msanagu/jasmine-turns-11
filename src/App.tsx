@@ -289,7 +289,7 @@ export default function App() {
                 transition: { type: "spring", stiffness: 100, damping: 15 }
               }
             }}
-            whileHover={{ y: -8, scale: 1.03, rotate: -2, boxShadow: "0 20px 25px -5px rgba(0, 119, 182, 0.1)" }}
+            whileHover={{ y: -8, scale: 1.03, boxShadow: "0 20px 25px -5px rgba(0, 119, 182, 0.1)" }}
             className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100/80 flex flex-col justify-between"
           >
             <div className="flex items-start gap-4">
@@ -322,7 +322,7 @@ export default function App() {
                 transition: { type: "spring", stiffness: 100, damping: 15 }
               }
             }}
-            whileHover={{ y: -8, scale: 1.03, rotate: 2, boxShadow: "0 20px 25px -5px rgba(2, 62, 138, 0.1)" }}
+            whileHover={{ y: -8, scale: 1.03, boxShadow: "0 20px 25px -5px rgba(2, 62, 138, 0.1)" }}
             className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100/80 flex flex-col justify-between"
           >
             <div className="flex items-start gap-4">
@@ -353,7 +353,7 @@ export default function App() {
                 transition: { type: "spring", stiffness: 100, damping: 15 }
               }
             }}
-            whileHover={{ y: -8, scale: 1.03, rotate: -1, boxShadow: "0 20px 25px -5px rgba(0, 150, 199, 0.1)" }}
+            whileHover={{ y: -8, scale: 1.03, boxShadow: "0 20px 25px -5px rgba(0, 150, 199, 0.1)" }}
             className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100/80 flex flex-col justify-between"
           >
             <div className="flex items-start gap-4">
@@ -386,7 +386,7 @@ export default function App() {
                 transition: { type: "spring", stiffness: 100, damping: 15 }
               }
             }}
-            whileHover={{ y: -8, scale: 1.03, rotate: 3, boxShadow: "0 20px 25px -5px rgba(255, 215, 0, 0.15)" }}
+            whileHover={{ y: -8, scale: 1.03, boxShadow: "0 20px 25px -5px rgba(255, 215, 0, 0.15)" }}
             className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100/80 flex flex-col justify-between"
           >
             <div className="flex items-start gap-4">
@@ -423,7 +423,7 @@ export default function App() {
               <SoundGenerator ref={soundRef} />
               
               {/* Note card styling matching Artistic Flair */}
-              <div className="bg-white p-6 rounded-[32px] border-2 border-[#00B4D8]/25 flex-1 flex flex-col gap-3 relative shadow-2xl rotate-[-1deg]">
+              <div className="bg-white p-6 rounded-[32px] border-2 border-[#00B4D8]/25 flex-1 flex flex-col gap-3 relative shadow-2xl">
                 <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#fff7ca] rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-xl">🤙</span>
                 </div>
@@ -443,7 +443,7 @@ export default function App() {
 
         {/* Gift Wishlist Station Card */}
         <section id="gift_wishlist_section">
-          <div className="bg-gradient-to-r from-[#CAF0F8] to-[#E0F2FE] shadow-2xl border-2 border-[#00B4D8]/30 rounded-[32px] p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 rotate-[-0.5deg]">
+          <div className="bg-gradient-to-r from-[#CAF0F8] to-[#E0F2FE] shadow-2xl border-2 border-[#00B4D8]/30 rounded-[32px] p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8">
             <div className="w-16 h-16 bg-[#0096C7] rounded-2xl flex-shrink-0 flex items-center justify-center text-white text-3xl shadow-lg rotate-[-3deg]">
               🎁
             </div>
@@ -455,7 +455,7 @@ export default function App() {
                 Jasmine's 11th Birthday Wishlist
               </h3>
               <p className="font-sans text-xs md:text-sm text-gray-600 leading-relaxed">
-                If you feel inclined to send a birthday gift, they can be ordered online and delivered straight to Jasmine's home! This saves you the worry of protecting beautifully wrapped gifts from the fine beach sand or lugging packages across the shore. No gifts are expected physically at the beach—your joyous company is our biggest treat!
+                If you feel inclined to send a birthday gift, they can be ordered online and delivered straight to Jasmine's home! This saves you the trouble of lugging packages across the shore. No gifts are expected physically at the beach—your joyous company is our biggest treat!
               </p>
             </div>
             <div className="shrink-0 w-full md:w-auto text-center">
