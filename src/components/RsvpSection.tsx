@@ -328,56 +328,59 @@ export default function RsvpSection() {
                   initial={{ opacity: 0, scale: 0.9, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className={`rounded-2xl p-3.5 border shadow-xs flex flex-row items-start justify-between gap-4 relative group transition-all ${
-                    rsvp.attending === false 
-                      ? 'bg-[#FDF2F8]/40 border-[#D81B60]/15 opacity-85 hover:border-[#D81B60]/30' 
+                  className={`rounded-2xl p-3.5 border shadow-xs flex flex-col gap-2 relative group transition-all ${
+                    rsvp.attending === false
+                      ? 'bg-[#FDF2F8]/40 border-[#D81B60]/15 opacity-85 hover:border-[#D81B60]/30'
                       : 'bg-[#CAF0F8]/15 border-[#00B4D8]/25 hover:border-[#0096C7]'
                   }`}
                 >
-                  <div className="flex items-start gap-3 min-w-0 flex-1">
-                    <span className="text-2xl select-none shrink-0 mt-0.5">{AVATAR_MAP[rsvp.avatarStyle]}</span>
-                    <div className="min-w-0 flex-1">
-                      <h5 className={`font-sans font-bold text-sm leading-snug break-words ${rsvp.attending === false ? 'text-[#B5179E]' : 'text-[#0077B6]'}`}>
-                        {rsvp.name}
-                      </h5>
-                      <span className="font-sans text-[10px] text-gray-400 block mt-0.5">
-                        {rsvp.timestamp} {rsvp.attending === false ? '• Sent Regrets' : ''}
-                      </span>
-                      {rsvp.message && (
-                        <p className={`font-sans text-xs italic mt-2 p-2.5 border rounded-xl break-words leading-relaxed shadow-2xs ${
-                          rsvp.attending === false 
-                            ? 'text-gray-500 bg-white/40 border-[#D81B60]/10' 
-                            : 'text-gray-600 bg-white/65 border-[#00B4D8]/10'
-                        }`}>
-                          "{rsvp.message}"
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className="text-right">
-                      {rsvp.attending === false ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-xs bg-[#FCE7F3] text-[#D81B60] font-bold border border-[#D81B60]/15 font-semibold">
-                          😔 Regrets
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      <span className="text-2xl select-none shrink-0 mt-0.5">{AVATAR_MAP[rsvp.avatarStyle]}</span>
+                      <div className="min-w-0 flex-1">
+                        <h5 className={`font-sans font-bold text-sm leading-snug wrap-break-word ${rsvp.attending === false ? 'text-[#B5179E]' : 'text-[#0077B6]'}`}>
+                          {rsvp.name}
+                        </h5>
+                        <span className="font-sans text-[10px] text-gray-400 block mt-0.5">
+                          {rsvp.timestamp} {rsvp.attending === false ? '• Sent Regrets' : ''}
                         </span>
-                      ) : (
-                        (rsvp.boogieBoardCount || 0) > 0 && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-sans text-xs bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15 shadow-2xs">
-                            🌊 {(rsvp.boogieBoardCount || 0)} Board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
-                          </span>
-                        )
-                      )}
+                      </div>
                     </div>
 
-                    <button
-                      onClick={() => handleDelete(rsvp.id)}
-                      type="button"
-                      className="text-gray-300 hover:text-red-500 hover:bg-red-54 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="text-right">
+                        {rsvp.attending === false ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-xs bg-[#FCE7F3] text-[#D81B60] font-bold border border-[#D81B60]/15">
+                            😔 Regrets
+                          </span>
+                        ) : (
+                          (rsvp.boogieBoardCount || 0) > 0 && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-sans text-xs bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15 shadow-2xs">
+                              🌊 {(rsvp.boogieBoardCount || 0)} Board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
+                            </span>
+                          )
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => handleDelete(rsvp.id)}
+                        type="button"
+                        className="text-gray-300 hover:text-red-500 hover:bg-red-54 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
+
+                  {rsvp.message && (
+                    <p className={`font-sans text-xs italic p-2.5 border rounded-xl wrap-break-word leading-relaxed shadow-2xs w-full ${
+                      rsvp.attending === false
+                        ? 'text-gray-500 bg-white/40 border-[#D81B60]/10'
+                        : 'text-gray-600 bg-white/65 border-[#00B4D8]/10'
+                    }`}>
+                      "{rsvp.message}"
+                    </p>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
