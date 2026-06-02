@@ -519,11 +519,9 @@ export default function App() {
 
       {/* Styled Footer */}
       <footer className="mt-12 bg-[#FDF6E3] border-t border-[#1D4E89]/10 py-8 text-center text-xs text-gray-500 relative z-30 select-none">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-1.5 font-sans font-medium text-gray-500">
-          <span>Crafted with</span>
-          <Heart className="w-3.5 h-3.5 text-[#0077B6] fill-[#0077B6]" />
-          <span>for Jasmine's 11th Beach Birthday Bash by Mama Sanagu.</span>
-        </div>
+        <p className="max-w-6xl mx-auto px-4 font-sans font-medium text-gray-500 text-center leading-relaxed">
+          Crafted with <Heart className="w-3.5 h-3.5 text-[#0077B6] fill-[#0077B6] inline align-middle -mt-0.5" /> for Jasmine's 11th Beach Birthday Bash by Mama Sanagu.
+        </p>
       </footer>
     </div>
   );
