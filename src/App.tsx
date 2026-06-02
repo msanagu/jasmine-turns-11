@@ -298,8 +298,8 @@ export default function App() {
               </div>
               <div className="flex-1 min-w-0">
                 <h5 className="font-sans font-bold text-xs text-[#0077B6] uppercase tracking-widest leading-none">Friday • June</h5>
-                <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">12:00 PM — 8:00 PM</p>
-                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Boogie boarding, burgers & s'mores!</p>
+                <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">As early as 12 PM — 8 PM</p>
+                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Arrive when you can, stay as long as you like</p>
               </div>
             </div>
             <a 
