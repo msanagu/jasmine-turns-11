@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Check, Trash2, Send } from 'lucide-react';
+import { Calendar, Check, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   collection,
   onSnapshot,
   addDoc,
-  deleteDoc,
-  doc,
   orderBy,
   query,
   serverTimestamp,
@@ -14,18 +12,6 @@ import {
 import { db } from '../firebase';
 import { RSVP } from '../types';
 
-const SEED_RSVP: RSVP = {
-  id: 'seed-1',
-  name: 'Jasmine (Birthday Girl 👑)',
-  attending: true,
-  adultCount: 2,
-  childCount: 2,
-  bringingBoogieBoard: true,
-  boogieBoardCount: 2,
-  avatarStyle: 'surfboard',
-  timestamp: 'Jun 1, 2026',
-  message: "Can't wait to party with everyone and eat s'mores! 🌊🍰",
-};
 
 const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
   surfboard: '🏄‍♀️',
@@ -100,15 +86,7 @@ export default function RsvpSection() {
     setTimeout(() => setIsSubmitted(false), 4000);
   };
 
-  const handleDelete = async (id: string) => {
-    if (id.startsWith('seed-')) {
-      alert("Can't remove the party hosts list! Feel free to add and delete your own RSVPs.");
-      return;
-    }
-    await deleteDoc(doc(db, 'rsvps', id));
-  };
-
-  const displayRsvps = [SEED_RSVP, ...rsvps];
+  const displayRsvps = rsvps;
 
   const totals = {
     attending: displayRsvps.filter(r => r.attending !== false).length,
@@ -386,13 +364,6 @@ export default function RsvpSection() {
                         </span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleDelete(rsvp.id)}
-                      type="button"
-                      className="text-gray-300 hover:text-red-500 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
 
                   {/* Badges row */}
