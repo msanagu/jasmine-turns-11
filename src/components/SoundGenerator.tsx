@@ -16,7 +16,7 @@ const SoundGenerator = forwardRef<SoundGeneratorHandle, {}>(function SoundGenera
   const [activeMode, setActiveMode] = useState<SoundMode>(() =>
     Math.random() < 0.5 ? 'steeldrum' : 'ukulele'
   );
-  const [volume, setVolume] = useState(0.4);
+  const [volume, setVolume] = useState(0.25);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
