@@ -125,7 +125,6 @@ export default function MapSection() {
       {/* Prominent Full-Width Parental Guide and Travel Section */}
       <div className="border-t-2 border-[#00B4D8]/15 pt-6 mt-2 flex flex-col gap-5">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#D81B60]" />
           <h4 className="font-sans font-black text-base sm:text-lg text-[#1D4E89] uppercase tracking-wider">
             🚗 Essential Arrival, Parking & Safety Guide
           </h4>
