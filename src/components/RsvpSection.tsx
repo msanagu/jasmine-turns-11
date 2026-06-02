@@ -125,7 +125,7 @@ export default function RsvpSection() {
 
           {/* Call / Text note */}
           <p className="font-sans text-[11px] text-gray-500 leading-relaxed bg-[#CAF0F8]/30 rounded-2xl p-3.5 border border-[#00B4D8]/15">
-            📞 Prefer to RSVP directly, or need to change an existing response? Call or text Mary at{' '}
+            📱 Prefer to RSVP directly, or need to change an existing response? Text Mary at{' '}
             <span className="font-bold text-[#0077B6] whitespace-nowrap">949-291-2504</span>.
           </p>
         </div>
@@ -391,8 +391,8 @@ export default function RsvpSection() {
             <div className="font-sans text-[11px] text-gray-500 leading-normal flex items-center gap-2 justify-center sm:justify-start">
               <span className="w-2 h-2 rounded-full bg-[#0077B6] animate-pulse shrink-0"></span>
               <span>
-                Plans changed? Call or text Mary at{' '}
-                <a href="tel:9492912504" className="underline font-bold text-[#0077B6] hover:text-[#005F73] inline-block whitespace-nowrap">
+                Plans changed? Text Mary at{' '}
+                <a href="sms:9492912504" className="underline font-bold text-[#0077B6] hover:text-[#005F73] inline-block whitespace-nowrap">
                   949-291-2504
                 </a>{' '}
                 to update!

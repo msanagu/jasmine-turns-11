@@ -127,11 +127,11 @@ export default function App() {
 
             {/* Contact Mary — secondary, outlined */}
             <a
-              href="tel:9492912504"
+              href="sms:9492912504?body=Hi Mary!"
               className="px-3.5 py-1.5 border-2 border-[#00B4D8]/50 hover:border-[#00B4D8]/50 text-[#0077B6] hover:bg-[#CAF0F8] text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Contact Mary</span>
+              <span className="hidden sm:inline">Text Mary</span>
             </a>
 
             {/* RSVP — primary CTA, most prominent */}
@@ -395,18 +395,11 @@ export default function App() {
               <div className="flex-1 min-w-0">
                 <h5 className="font-sans font-bold text-xs text-[#0077B6] uppercase tracking-widest leading-none">RSVP to Mary</h5>
                 <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">949.291.2504</p>
-                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Contact Mary anytime</p>
+                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Text Mary anytime</p>
               </div>
             </div>
             <div className="flex gap-2.5 mt-5">
-              <a 
-                href="tel:9492912504"
-                className="font-sans text-xs sm:text-sm text-[#0077B6] font-bold hover:underline"
-              >
-                Call
-              </a>
-              <span className="text-gray-300">|</span>
-              <a 
+              <a
                 href="sms:9492912504?body=Hi Mary, I would love to RSVP for Jasmine's beach bash!"
                 className="font-sans text-xs sm:text-sm text-[#0077B6] font-bold hover:underline"
               >
@@ -501,7 +494,7 @@ export default function App() {
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="https://www.amazon.com/hz/wishlist/ls/3U2J5IOQ0QIY8?ref_=wl_share"
+                href="https://www.amazon.com/hz/wishlist/ls/151QWIB2KW845?ref_=wl_share"
                 target="_blank"
                 rel="noreferrer noopener"
                 className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#0096C7] to-[#0077B6] hover:from-[#0077B6] hover:to-[#00B4D8] text-white font-sans font-black rounded-2xl shadow-xl text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
