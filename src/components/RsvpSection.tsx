@@ -18,11 +18,13 @@ const SEED_RSVP: RSVP = {
   id: 'seed-1',
   name: 'Jasmine (Birthday Girl 👑)',
   attending: true,
+  adultCount: 2,
+  childCount: 2,
   bringingBoogieBoard: true,
   boogieBoardCount: 2,
   avatarStyle: 'surfboard',
   timestamp: 'Jun 1, 2026',
-  message: "Can't wait to catch some awesome waves and eat lots of s'mores! 🌊🍰",
+  message: "Can't wait to party with everyone and eat s'mores! 🌊🍰",
 };
 
 const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
@@ -40,6 +42,8 @@ export default function RsvpSection() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [attending, setAttending] = useState(true);
+  const [adultCount, setAdultCount] = useState(1);
+  const [childCount, setChildCount] = useState(0);
   const [boogieBoardCount, setBoogieBoardCount] = useState(0);
   const [avatar, setAvatar] = useState<RSVP['avatarStyle']>('surfboard');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -53,6 +57,8 @@ export default function RsvpSection() {
           id: d.id,
           name: data.name,
           attending: data.attending,
+          adultCount: data.adultCount ?? 1,
+          childCount: data.childCount ?? 0,
           bringingBoogieBoard: data.bringingBoogieBoard,
           boogieBoardCount: data.boogieBoardCount,
           avatarStyle: data.avatarStyle,
@@ -73,6 +79,8 @@ export default function RsvpSection() {
     await addDoc(collection(db, 'rsvps'), {
       name: name.trim(),
       attending,
+      adultCount: attending ? adultCount : 0,
+      childCount: attending ? childCount : 0,
       bringingBoogieBoard: actualCount > 0,
       boogieBoardCount: actualCount,
       avatarStyle: avatar,
@@ -84,6 +92,8 @@ export default function RsvpSection() {
     setName('');
     setMessage('');
     setAttending(true);
+    setAdultCount(1);
+    setChildCount(0);
     setBoogieBoardCount(0);
     setAvatar('surfboard');
     setIsSubmitted(true);
@@ -103,6 +113,8 @@ export default function RsvpSection() {
   const totals = {
     attending: displayRsvps.filter(r => r.attending !== false).length,
     regrets: displayRsvps.filter(r => r.attending === false).length,
+    adults: displayRsvps.reduce((sum, r) => sum + (r.attending ? (r.adultCount || 0) : 0), 0),
+    children: displayRsvps.reduce((sum, r) => sum + (r.attending ? (r.childCount || 0) : 0), 0),
     boogieBoards: displayRsvps.reduce((sum, r) => sum + (r.attending ? (r.boogieBoardCount || 0) : 0), 0),
   };
 
@@ -161,6 +173,33 @@ export default function RsvpSection() {
               </button>
             </div>
           </div>
+
+          {/* Headcount — adults & children */}
+          {attending && (
+            <div className="flex flex-col gap-2 bg-[#CAF0F8]/25 border border-[#00B4D8]/20 p-4 rounded-2xl">
+              <span className="font-sans font-black text-xs text-[#0077B6]">How many in your group? 👨‍👩‍👧</span>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Adults */}
+                <div className="flex flex-col gap-1">
+                  <span className="font-sans text-[10px] text-gray-500 font-bold uppercase tracking-wide">Adults</span>
+                  <div className="flex items-center justify-between bg-white rounded-xl border border-[#00B4D8]/20 px-2 py-1.5">
+                    <button type="button" onClick={() => setAdultCount(c => Math.max(0, c - 1))} className="w-6 h-6 rounded-lg bg-[#CAF0F8] text-[#0077B6] font-black text-sm flex items-center justify-center cursor-pointer hover:bg-[#0096C7] hover:text-white transition-all">−</button>
+                    <span className="font-mono font-black text-sm text-[#0077B6]">{adultCount}</span>
+                    <button type="button" onClick={() => setAdultCount(c => Math.min(10, c + 1))} className="w-6 h-6 rounded-lg bg-[#CAF0F8] text-[#0077B6] font-black text-sm flex items-center justify-center cursor-pointer hover:bg-[#0096C7] hover:text-white transition-all">+</button>
+                  </div>
+                </div>
+                {/* Children */}
+                <div className="flex flex-col gap-1">
+                  <span className="font-sans text-[10px] text-gray-500 font-bold uppercase tracking-wide">Children</span>
+                  <div className="flex items-center justify-between bg-white rounded-xl border border-[#00B4D8]/20 px-2 py-1.5">
+                    <button type="button" onClick={() => setChildCount(c => Math.max(0, c - 1))} className="w-6 h-6 rounded-lg bg-[#CAF0F8] text-[#0077B6] font-black text-sm flex items-center justify-center cursor-pointer hover:bg-[#0096C7] hover:text-white transition-all">−</button>
+                    <span className="font-mono font-black text-sm text-[#0077B6]">{childCount}</span>
+                    <button type="button" onClick={() => setChildCount(c => Math.min(10, c + 1))} className="w-6 h-6 rounded-lg bg-[#CAF0F8] text-[#0077B6] font-black text-sm flex items-center justify-center cursor-pointer hover:bg-[#0096C7] hover:text-white transition-all">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Guest Name input */}
           <div className="flex flex-col gap-1.5">
@@ -354,11 +393,20 @@ export default function RsvpSection() {
                             😔 Regrets
                           </span>
                         ) : (
-                          (rsvp.boogieBoardCount || 0) > 0 && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-sans text-xs bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15 shadow-2xs">
-                              🌊 {(rsvp.boogieBoardCount || 0)} Board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
-                            </span>
-                          )
+                          <div className="flex flex-col items-end gap-1">
+                            {((rsvp.adultCount || 0) > 0 || (rsvp.childCount || 0) > 0) && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-sans text-[10px] bg-[#E0F2FE] text-[#0077B6] font-bold border border-[#00B4D8]/15">
+                                {(rsvp.adultCount || 0) > 0 && <>{rsvp.adultCount} adult{(rsvp.adultCount || 0) !== 1 ? 's' : ''}</>}
+                                {(rsvp.adultCount || 0) > 0 && (rsvp.childCount || 0) > 0 && <span className="opacity-40">·</span>}
+                                {(rsvp.childCount || 0) > 0 && <>{rsvp.childCount} kid{(rsvp.childCount || 0) !== 1 ? 's' : ''}</>}
+                              </span>
+                            )}
+                            {(rsvp.boogieBoardCount || 0) > 0 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-sans text-[10px] bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15">
+                                🌊 {rsvp.boogieBoardCount} board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
 
@@ -410,9 +458,9 @@ export default function RsvpSection() {
         </div>
 
         {/* Totals Summary */}
-        <div className="bg-white border-2 border-[#00B4D8]/25 rounded-[32px] p-5 grid grid-cols-3 gap-2 text-center shadow-2xl relative z-10">
+        <div className="bg-white border-2 border-[#00B4D8]/25 rounded-[32px] p-5 grid grid-cols-5 gap-2 text-center shadow-2xl relative z-10">
           <div>
-            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Attending</span>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Groups</span>
             <div className="font-sans font-black text-xl sm:text-2xl text-[#0077B6] mt-1">{totals.attending}</div>
           </div>
           <div>
@@ -420,8 +468,16 @@ export default function RsvpSection() {
             <div className="font-sans font-black text-xl sm:text-2xl text-[#D81B60] mt-1">{totals.regrets}</div>
           </div>
           <div>
-            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Boards Count</span>
-            <div className="font-sans font-black text-xl sm:text-2xl text-[#0096C7] mt-1">{totals.boogieBoards}</div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Adults</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#023E8A] mt-1">{totals.adults}</div>
+          </div>
+          <div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Kids</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#0096C7] mt-1">{totals.children}</div>
+          </div>
+          <div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Boards</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#00B4D8] mt-1">{totals.boogieBoards}</div>
           </div>
         </div>
       </div>
