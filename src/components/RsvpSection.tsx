@@ -1,0 +1,444 @@
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Calendar, BookOpen, Check, Trash2, Send, Flame } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { RSVP } from '../types';
+
+const INITIAL_RSVPS: RSVP[] = [
+  {
+    id: 'seed-1',
+    name: 'Jasmine (Birthday Girl 👑)',
+    attending: true,
+    bringingBoogieBoard: true,
+    boogieBoardCount: 2,
+    avatarStyle: 'surfboard',
+    timestamp: 'June 1, 2026',
+    message: "Can't wait to catch some awesome waves and eat lots of s'mores! 🌊🍰"
+  },
+];
+
+const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
+  surfboard: '🏄‍♀️',
+  volleyball: '🏐',
+  sunglasses: '🕶️',
+  sun: '☀️',
+  shell: '🐚',
+  umbrella: '🏖️',
+  palm: '🌴'
+};
+
+export default function RsvpSection() {
+  const [rsvps, setRsvps] = useState<RSVP[]>([]);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [attending, setAttending] = useState(true);
+  const [boogieBoardCount, setBoogieBoardCount] = useState(0);
+  const [avatar, setAvatar] = useState<RSVP['avatarStyle']>('surfboard');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('jasmine_beach_bash_rsvps');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const migrated = parsed.map((item: any) => ({
+          ...item,
+          attending: item.attending !== undefined ? item.attending : true,
+          bringingBoogieBoard: item.bringingBoogieBoard !== undefined ? item.bringingBoogieBoard : (item.boogieBoardCount > 0),
+          boogieBoardCount: item.boogieBoardCount !== undefined ? item.boogieBoardCount : (item.bringingBoogieBoard ? 1 : 0)
+        }));
+        setRsvps(migrated);
+      } catch (e) {
+        setRsvps(INITIAL_RSVPS);
+      }
+    } else {
+      setRsvps(INITIAL_RSVPS);
+      localStorage.setItem('jasmine_beach_bash_rsvps', JSON.stringify(INITIAL_RSVPS));
+    }
+  }, []);
+
+  const saveRsvps = (list: RSVP[]) => {
+    setRsvps(list);
+    localStorage.setItem('jasmine_beach_bash_rsvps', JSON.stringify(list));
+  };
+
+  const handleRsvp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+
+    const actualCount = attending ? boogieBoardCount : 0;
+    const newRsvp: RSVP = {
+      id: Date.now().toString(),
+      name: name.trim(),
+      attending: attending,
+      bringingBoogieBoard: actualCount > 0,
+      boogieBoardCount: actualCount,
+      avatarStyle: avatar,
+      timestamp: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+      message: message.trim() ? message.trim() : undefined,
+    };
+
+    const updated = [newRsvp, ...rsvps];
+    saveRsvps(updated);
+    
+    // Reset form & show submission feedback
+    setName('');
+    setMessage('');
+    setAttending(true);
+    setBoogieBoardCount(0);
+    setAvatar('surfboard');
+    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(false), 4000);
+  };
+
+  const handleDelete = (id: string) => {
+    if (id.startsWith('seed-')) {
+      alert("Can't remove the party hosts list! Feel free to add and delete your own RSVPs.");
+      return;
+    }
+    const filtered = rsvps.filter(item => item.id !== id);
+    saveRsvps(filtered);
+  };
+
+  const totals = {
+    attending: rsvps.filter(r => r.attending !== false).length,
+    regrets: rsvps.filter(r => r.attending === false).length,
+    boogieBoards: rsvps.reduce((sum, r) => sum + (r.attending ? (r.boogieBoardCount || 0) : 0), 0),
+  };
+
+  return (
+    <div className="grid lg:grid-cols-12 gap-8 items-stretch">
+      {/* RSVP Form Column */}
+      <div className="lg:col-span-12 xl:col-span-5 bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative rotate-[-0.5deg]">
+        <div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#CAF0F8] text-[#0077B6] mb-3">
+            <Calendar className="w-3.5 h-3.5" /> RSVP BOARD
+          </span>
+          <h3 className="font-sans font-black text-2xl text-[#1D4E89] tracking-tight leading-none mb-1">
+            {attending ? "Count Me In!" : "Send My Regrets"}
+          </h3>
+          <p className="font-sans text-xs text-[#1D4E89]/75 mb-3.5">
+            {attending 
+              ? "Let Jasmine and Mary know if you're coming to the beach birthday bash!" 
+              : "Let Jasmine and Mary know you won't be able to make it (leave a sweet note!)."}
+          </p>
+
+          {/* Call / Text Direct RSVP Section */}
+          <div className="flex flex-col gap-1.5 bg-[#CAF0F8]/30 rounded-2xl p-3.5 border border-[#00B4D8]/15 shadow-2xs">
+            <span className="font-sans font-black text-[10px] text-[#0077B6] uppercase tracking-wider block">
+              📞 OR RSVP BY CALL / TEXT
+            </span>
+            <span className="font-sans text-[11px] text-gray-500 block leading-normal">
+              Prefer direct contact? You can call or text Mary at any time!
+            </span>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <a
+                href="tel:9492912504"
+                className="py-1.5 bg-white hover:bg-gray-50 text-[11px] font-sans font-bold text-center border border-[#0077B6]/20 text-[#0077B6] rounded-lg transition-all shadow-3xs flex items-center justify-center gap-1.5"
+              >
+                📞 Call Mary
+              </a>
+              <a
+                href="sms:9492912504?body=Hi Mary, I would love to RSVP for Jasmine's beach bash!"
+                className="py-1.5 bg-[#0096C7] hover:bg-[#0077B6] text-[11px] font-sans font-bold text-center text-white rounded-lg transition-all shadow-3xs flex items-center justify-center gap-1.5"
+              >
+                💬 Text Mary
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleRsvp} className="flex flex-col gap-5">
+          {/* Are you attending Toggle */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+              Will you be attending?
+            </label>
+            <div className="grid grid-cols-2 gap-2 bg-[#CAF0F8]/20 p-1 rounded-xl border border-[#00B4D8]/10">
+              <button
+                type="button"
+                onClick={() => setAttending(true)}
+                className={`py-2.5 px-3 rounded-lg font-sans font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  attending 
+                    ? 'bg-[#0077B6] text-white shadow-sm font-black' 
+                    : 'text-[#1D4E89]/80 hover:bg-white/50'
+                }`}
+              >
+                👍 Yes, Count Me In!
+              </button>
+              <button
+                type="button"
+                onClick={() => setAttending(false)}
+                className={`py-2.5 px-3 rounded-lg font-sans font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  !attending 
+                    ? 'bg-[#D81B60] text-white shadow-sm font-black' 
+                    : 'text-[#1D4E89]/80 hover:bg-white/50'
+                }`}
+              >
+                😔 No, Send Regrets
+              </button>
+            </div>
+          </div>
+
+          {/* Guest Name input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+              Guest Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Charlie"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full font-sans text-sm p-3 bg-white border-2 border-gray-100 rounded-xl focus:outline-hidden focus:border-[#00B4D8] focus:bg-white transition-all text-[#1D4E89]"
+              required
+            />
+          </div>
+
+          {/* Select Avatar emoji */}
+          <div className="flex flex-col gap-1.5">
+            <span className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+              Choose your Beach Badge / Icon
+            </span>
+            <div className="grid grid-cols-7 gap-1.5 bg-[#CAF0F8]/30 p-2 rounded-xl border border-[#00B4D8]/10">
+              {Object.entries(AVATAR_MAP).map(([key, emoji]) => (
+                <motion.button
+                  key={key}
+                  type="button"
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.9 }}
+                  animate={{ scale: avatar === key ? 1.15 : 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  onClick={() => setAvatar(key as RSVP['avatarStyle'])}
+                  className={`flex items-center justify-center h-10 rounded-lg text-lg hover:bg-white cursor-pointer transition-all ${
+                     avatar === key ? 'bg-white shadow-md border-2 border-[#0096C7]' : 'opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  {emoji}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Guest Message / Wish input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block flex justify-between">
+              <span>{attending ? "Message or Wish (Optional)" : "Send a Wish to Jasmine! ✨"}</span>
+              <span className="text-[10px] text-gray-400 font-normal">{message.length}/100</span>
+            </label>
+            <input
+              type="text"
+              placeholder={attending ? "Leave a short note or birthday wish... ✨" : "Write a warm birthday wish for Jasmine! 🎉"}
+              value={message}
+              onChange={(e) => setMessage(e.target.value.slice(0, 100))}
+              className="w-full font-sans text-sm p-3 bg-white border-2 border-gray-100 rounded-xl focus:outline-hidden focus:border-[#00B4D8] focus:bg-white transition-all text-[#1D4E89]"
+            />
+          </div>
+
+          {/* Boogie Board Count Selector */}
+          {attending && (
+            <div className="flex flex-col gap-2 bg-[#CAF0F8]/25 border border-[#00B4D8]/20 p-4 rounded-2xl">
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="font-sans font-black text-xs text-[#0077B6] block">
+                    Bringing Boogie Boards? 🌊
+                  </span>
+                  <span className="font-sans text-[10px] text-[#005F73] leading-none block mt-0.5">
+                    Select how many boards your group can bring!
+                  </span>
+                </div>
+                <span className="text-sm font-mono font-bold text-[#0077B6] bg-white px-2.5 py-0.5 rounded-lg border border-[#00B4D8]/30">
+                  {boogieBoardCount} board{boogieBoardCount !== 1 ? 's' : ''}
+                </span>
+              </div>
+              <div className="grid grid-cols-4 gap-2 mt-1">
+                {[0, 1, 2, 3].map((count) => (
+                  <button
+                    key={count}
+                    type="button"
+                    onClick={() => setBoogieBoardCount(count)}
+                    className={`py-2 px-2.5 rounded-lg font-sans font-bold text-xs cursor-pointer transition-all ${
+                      boogieBoardCount === count
+                        ? 'bg-[#0096C7] text-white shadow-sm'
+                        : 'bg-white hover:bg-[#CAF0F8]/30 text-[#1D4E89] border border-[#00B4D8]/15'
+                    }`}
+                  >
+                    {count === 3 ? '3+ Boards' : count === 0 ? 'None' : `${count} Board`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Submit button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            className={`w-full mt-2 bg-gradient-to-r text-white font-sans font-bold p-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-colors ${
+              attending 
+                ? 'from-[#0096C7] to-[#0077B6] hover:from-[#0077B6] hover:to-[#00B4D8]' 
+                : 'from-[#D81B60] to-[#E24E8D] hover:from-[#E24E8D] hover:to-[#D81B60]'
+            }`}
+          >
+            <Send className="w-3.5 h-3.5" /> {attending ? "Save My Spot" : "Send My Regrets"}
+          </motion.button>
+
+          <AnimatePresence>
+            {isSubmitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className={`border-2 p-3 rounded-xl flex items-center gap-2.5 ${
+                  attending 
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-100' 
+                    : 'bg-amber-50 text-amber-800 border-amber-100'
+                }`}
+              >
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-white ${
+                  attending ? 'bg-emerald-500' : 'bg-amber-500'
+                }`}>
+                  <Check className="w-3 h-3 stroke-[3]" />
+                </div>
+                <div className="font-sans text-xs">
+                  {attending ? (
+                    <>
+                      <strong className="block">Awesome, you're added!</strong>
+                      Your RSVP spot is safely secured on the beach blanket quilt!
+                    </>
+                  ) : (
+                    <>
+                      <strong className="block">We'll miss you! 😔</strong>
+                      Your warm wishes have been sent to Jasmine and Mary.
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </form>
+      </div>
+
+      {/* Guest blanket quilt column */}
+      <div className="lg:col-span-12 xl:col-span-7 flex flex-col gap-6 h-full justify-between">
+        {/* Beach quilt of guests */}
+        <div className="bg-white/95 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 flex flex-col gap-4 relative z-10 flex-1 min-h-[350px] rotate-[0.5deg]">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+            <h4 className="font-sans font-black text-lg text-[#1D4E89] tracking-tight flex items-center gap-2">
+              🌞 Attendees Board
+            </h4>
+            <div className="flex gap-2">
+              <span className="font-sans font-mono text-[10px] text-[#0077B6] font-bold bg-[#CAF0F8] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                {totals.attending} Attending
+              </span>
+              <span className="font-sans font-mono text-[10px] text-[#D81B60] font-bold bg-[#FCE7F3] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                {totals.regrets} Regrets
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 overflow-y-auto max-h-[360px] pr-1">
+            <AnimatePresence initial={false}>
+              {rsvps.map(rsvp => (
+                <motion.div
+                  key={rsvp.id}
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className={`rounded-2xl p-3.5 border shadow-xs flex flex-row items-start justify-between gap-4 relative group transition-all ${
+                    rsvp.attending === false 
+                      ? 'bg-[#FDF2F8]/40 border-[#D81B60]/15 opacity-85 hover:border-[#D81B60]/30' 
+                      : 'bg-[#CAF0F8]/15 border-[#00B4D8]/25 hover:border-[#0096C7]'
+                  }`}
+                >
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <span className="text-2xl select-none shrink-0 mt-0.5">{AVATAR_MAP[rsvp.avatarStyle]}</span>
+                    <div className="min-w-0 flex-1">
+                      <h5 className={`font-sans font-bold text-sm leading-snug break-words ${rsvp.attending === false ? 'text-[#B5179E]' : 'text-[#0077B6]'}`}>
+                        {rsvp.name}
+                      </h5>
+                      <span className="font-sans text-[10px] text-gray-400 block mt-0.5">
+                        {rsvp.timestamp} {rsvp.attending === false ? '• Sent Regrets' : ''}
+                      </span>
+                      {rsvp.message && (
+                        <p className={`font-sans text-xs italic mt-2 p-2.5 border rounded-xl break-words leading-relaxed shadow-2xs ${
+                          rsvp.attending === false 
+                            ? 'text-gray-500 bg-white/40 border-[#D81B60]/10' 
+                            : 'text-[#1D4E89]/85 bg-white/65 border-[#00B4D8]/10'
+                        }`}>
+                          "{rsvp.message}"
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="text-right">
+                      {rsvp.attending === false ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-xs bg-[#FCE7F3] text-[#D81B60] font-bold border border-[#D81B60]/15 font-semibold">
+                          😔 Regrets
+                        </span>
+                      ) : (
+                        (rsvp.boogieBoardCount || 0) > 0 && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-sans text-xs bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15 shadow-2xs">
+                            🌊 {(rsvp.boogieBoardCount || 0)} Board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
+                          </span>
+                        )
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleDelete(rsvp.id)}
+                      type="button"
+                      className="text-gray-300 hover:text-red-500 hover:bg-red-54 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Plans Changed Notice */}
+          <div className="mt-2 pt-3 border-t border-[#00B4D8]/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left bg-[#CAF0F8]/10 p-2.5 rounded-xl">
+            <div className="font-sans text-[11px] text-gray-500 leading-normal flex items-center gap-2 justify-center sm:justify-start">
+              <span className="w-2 h-2 rounded-full bg-[#0077B6] animate-pulse shrink-0"></span>
+              <span>
+                Plans changed? Call or text Mary at{' '}
+                <a href="tel:9492912504" className="underline font-bold text-[#0077B6] hover:text-[#005F73] inline-block whitespace-nowrap">
+                  949-291-2504
+                </a>{' '}
+                to update!
+              </span>
+            </div>
+            <div className="flex gap-1.5 shrink-0">
+              <a
+                href="sms:9492912504?body=Hi Mary, I need to update my RSVP status for Jasmine's beach bash."
+                className="px-2.5 py-1 bg-white hover:bg-gray-50 border border-[#00B4D8]/20 text-[10px] font-sans font-bold text-[#0077B6] rounded-lg transition-all flex items-center gap-1 shadow-3xs"
+              >
+                💬 Text Update
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Totals Summary */}
+        <div className="bg-white border-2 border-[#00B4D8]/25 rounded-[32px] p-5 grid grid-cols-3 gap-2 text-center shadow-2xl relative z-10">
+          <div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Attending</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#0077B6] mt-1">{totals.attending}</div>
+          </div>
+          <div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Regrets</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#D81B60] mt-1">{totals.regrets}</div>
+          </div>
+          <div>
+            <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Boards Count</span>
+            <div className="font-sans font-black text-xl sm:text-2xl text-[#0096C7] mt-1">{totals.boogieBoards}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

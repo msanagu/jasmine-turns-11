@@ -1,0 +1,6 @@
+{
+  "name": "Beach Birthday Invitation",
+  "description": "Interactive landing page for Jasmine's 11th beach birthday bash with Google Maps integration, fun beach elements, RSVP manager, and interactive party details.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
