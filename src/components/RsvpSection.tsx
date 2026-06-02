@@ -20,7 +20,8 @@ const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
   sun: '☀️',
   shell: '🐚',
   umbrella: '🏖️',
-  palm: '🌴'
+  palm: '🌴',
+  shaka: '🤙',
 };
 
 export default function RsvpSection() {

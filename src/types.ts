@@ -6,7 +6,7 @@ export interface RSVP {
   childCount: number;
   bringingBoogieBoard: boolean;
   boogieBoardCount: number;
-  avatarStyle: 'surfboard' | 'volleyball' | 'sunglasses' | 'sun' | 'shell' | 'umbrella' | 'palm';
+  avatarStyle: 'surfboard' | 'volleyball' | 'sunglasses' | 'sun' | 'shell' | 'umbrella' | 'palm' | 'shaka';
   timestamp: string;
   message?: string;
 }
