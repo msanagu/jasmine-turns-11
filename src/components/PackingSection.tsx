@@ -6,12 +6,12 @@ import { BeachItem } from '../types';
 export default function PackingSection() {
   const [items, setItems] = useState<BeachItem[]>([
     { id: '1', name: 'Boogie Board 🌊', packed: false, required: false, icon: '🏄‍♀️' },
-    { id: '2', name: 'Sunscreen', packed: false, required: false, icon: '🧴' },
-    { id: '3', name: 'Warm Jacket or Hoodie for sunset breeze 🌅', packed: false, required: false, icon: '🧥' },
-    { id: '4', name: 'Beach Towel', packed: false, required: false, icon: '🧣' },
-    { id: '5', name: 'Swimwear', packed: false, required: false, icon: '🩳' },
-    { id: '6', name: 'A dry change of clothes', packed: false, required: false, icon: '👕' },
-    { id: '7', name: 'Appetite for burgers and s\'mores! 🍔', packed: false, required: false, icon: '🍫' },
+    { id: '2', name: 'Sunscreen', packed: false, required: true, icon: '🧴' },
+    { id: '3', name: 'Warm Jacket or Hoodie for sunset breeze 🌅', packed: false, required: true, icon: '🧥' },
+    { id: '4', name: 'Beach Towel', packed: false, required: true, icon: '🧣' },
+    { id: '5', name: 'Swimwear', packed: false, required: true, icon: '🩳' },
+    { id: '6', name: 'A dry change of clothes', packed: false, required: true, icon: '👕' },
+    { id: '7', name: 'Appetite for burgers and s\'mores! 🍔', packed: false, required: true, icon: '🍫' },
   ]);
 
   const [bagAnimation, setBagAnimation] = useState(false);
@@ -32,10 +32,11 @@ export default function PackingSection() {
   };
 
   const packedCount = items.filter(i => i.packed).length;
-  const isAllPacked = packedCount === items.length;
+  const isAllPacked = items.filter(i => i.required).every(i => i.packed);
   const isBoogiePacked = items.find(i => i.id === '1')?.packed;
 
   return (
+    <div className="flex flex-col gap-3">
     <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 md:p-8 flex flex-col gap-6 relative rotate-[0.5deg]">
       <div>
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#CAF0F8] text-[#0077B6] mb-3">
@@ -82,11 +83,29 @@ export default function PackingSection() {
             </p>
           </div>
 
+          {/* Packed item icons flowing in */}
+          <div className="flex flex-wrap justify-center gap-1 mt-2 min-h-7 px-2">
+            <AnimatePresence>
+              {items.filter(i => i.packed).map(item => (
+                <motion.span
+                  key={item.id}
+                  initial={{ scale: 0, opacity: 0, y: -10 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                  className="text-lg select-none"
+                >
+                  {item.icon}
+                </motion.span>
+              ))}
+            </AnimatePresence>
+          </div>
+
           {/* Quick status tip */}
           <div className="absolute bottom-3 left-3 right-3 text-center">
             <AnimatePresence mode="wait">
               {isAllPacked ? (
-                <motion.span 
+                <motion.span
                   key="done"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -95,18 +114,8 @@ export default function PackingSection() {
                 >
                   <Sparkles className="w-3 h-3" /> Fully Prepared!
                 </motion.span>
-              ) : !isBoogiePacked ? (
-                <motion.span 
-                  key="boogie"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0096C7] bg-[#0096C7]/10 px-2.5 py-0.5 rounded-full"
-                >
-                  <AlertCircle className="w-3 h-3" /> Don't forget boogie boards if you have them!
-                </motion.span>
               ) : (
-                <motion.span 
+                <motion.span
                   key="packing"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -170,6 +179,22 @@ export default function PackingSection() {
           ))}
         </motion.div>
       </div>
+    </div>
+
+    {/* Boogie board reminder — outside card so it has full width */}
+    <AnimatePresence>
+      {!isBoogiePacked && !isAllPacked && (
+        <motion.p
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          className="flex items-center gap-1.5 text-xs font-bold text-[#0096C7] px-2"
+        >
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          Don't forget to pack a boogie board if you have one!
+        </motion.p>
+      )}
+    </AnimatePresence>
     </div>
   );
 }
