@@ -373,6 +373,7 @@ export default function RsvpSection() {
                       : 'bg-[#CAF0F8]/15 border-[#00B4D8]/25 hover:border-[#0096C7]'
                   }`}
                 >
+                  {/* Name row */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 min-w-0 flex-1">
                       <span className="text-2xl select-none shrink-0 mt-0.5">{AVATAR_MAP[rsvp.avatarStyle]}</span>
@@ -385,40 +386,38 @@ export default function RsvpSection() {
                         </span>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-3 shrink-0">
-                      <div className="text-right">
-                        {rsvp.attending === false ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-xs bg-[#FCE7F3] text-[#D81B60] font-bold border border-[#D81B60]/15">
-                            😔 Regrets
-                          </span>
-                        ) : (
-                          <div className="flex flex-col items-end gap-1">
-                            {((rsvp.adultCount || 0) > 0 || (rsvp.childCount || 0) > 0) && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-sans text-[10px] bg-[#E0F2FE] text-[#0077B6] font-bold border border-[#00B4D8]/15">
-                                {(rsvp.adultCount || 0) > 0 && <>{rsvp.adultCount} adult{(rsvp.adultCount || 0) !== 1 ? 's' : ''}</>}
-                                {(rsvp.adultCount || 0) > 0 && (rsvp.childCount || 0) > 0 && <span className="opacity-40">·</span>}
-                                {(rsvp.childCount || 0) > 0 && <>{rsvp.childCount} kid{(rsvp.childCount || 0) !== 1 ? 's' : ''}</>}
-                              </span>
-                            )}
-                            {(rsvp.boogieBoardCount || 0) > 0 && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-sans text-[10px] bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15">
-                                🌊 {rsvp.boogieBoardCount} board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      <button
-                        onClick={() => handleDelete(rsvp.id)}
-                        type="button"
-                        className="text-gray-300 hover:text-red-500 hover:bg-red-54 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleDelete(rsvp.id)}
+                      type="button"
+                      className="text-gray-300 hover:text-red-500 p-1.5 rounded-lg opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
+
+                  {/* Badges row */}
+                  {rsvp.attending === false ? (
+                    <div>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-xs bg-[#FCE7F3] text-[#D81B60] font-bold border border-[#D81B60]/15">
+                        😔 Regrets
+                      </span>
+                    </div>
+                  ) : ((rsvp.adultCount || 0) > 0 || (rsvp.childCount || 0) > 0 || (rsvp.boogieBoardCount || 0) > 0) && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {((rsvp.adultCount || 0) > 0 || (rsvp.childCount || 0) > 0) && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-[10px] bg-[#E0F2FE] text-[#0077B6] font-bold border border-[#00B4D8]/15">
+                          {(rsvp.adultCount || 0) > 0 && <>{rsvp.adultCount} adult{(rsvp.adultCount || 0) !== 1 ? 's' : ''}</>}
+                          {(rsvp.adultCount || 0) > 0 && (rsvp.childCount || 0) > 0 && <span className="opacity-40">·</span>}
+                          {(rsvp.childCount || 0) > 0 && <>{rsvp.childCount} kid{(rsvp.childCount || 0) !== 1 ? 's' : ''}</>}
+                        </span>
+                      )}
+                      {(rsvp.boogieBoardCount || 0) > 0 && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-sans text-[10px] bg-[#CAF0F8] text-[#0077B6] font-bold border border-[#00B4D8]/15">
+                          🌊 {rsvp.boogieBoardCount} board{(rsvp.boogieBoardCount || 0) !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {rsvp.message && (
                     <p className={`font-sans text-xs italic p-2.5 border rounded-xl wrap-break-word leading-relaxed shadow-2xs w-full ${
@@ -458,7 +457,7 @@ export default function RsvpSection() {
         </div>
 
         {/* Totals Summary */}
-        <div className="bg-white border-2 border-[#00B4D8]/25 rounded-[32px] p-5 grid grid-cols-5 gap-2 text-center shadow-2xl relative z-10">
+        <div className="bg-white border-2 border-[#00B4D8]/25 rounded-4xl p-5 grid grid-cols-5 gap-2 text-center shadow-2xl relative z-10">
           <div>
             <span className="font-sans text-[10px] text-gray-400 uppercase font-black tracking-wider block leading-tight">Groups</span>
             <div className="font-sans font-black text-xl sm:text-2xl text-[#0077B6] mt-1">{totals.attending}</div>
