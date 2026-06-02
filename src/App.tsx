@@ -433,7 +433,7 @@ export default function App() {
                   <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase">We've got you covered!</span>
                 </div>
                 <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed tracking-wide italic">
-                  We can't wait to play in the sand, ride the ocean waves on our boogie boards, and end the evening with s'mores around the campfire! Burgers, buns, condiments, snacks, beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!
+                  We can't wait to play in the sand, ride the ocean waves, and enjoy the beach to the fullest with everyone! Burgers, buns, condiments, snacks, beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!
                 </p>
               </div>
             </div>

@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Compass, Info, ExternalLink, Car, Shield, Sparkles } from 'lucide-react';
+import { MapPin, Navigation, Compass, ExternalLink, Car, Shield } from 'lucide-react';
 import { motion } from 'motion/react';
-
-// Party location details
-const PARTY_LAT = 32.8550;
-const PARTY_LNG = -117.2570;
 
 export default function MapSection() {
   const [startAddress, setStartAddress] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleDirectionsSubmit = (e: React.FormEvent) => {
+  const handleDirectionsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!startAddress.trim()) return;
     
     // Open Google Maps directions in a new tab smoothly
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(startAddress.trim())}&destination=${PARTY_LAT},${PARTY_LNG}`;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(startAddress.trim())}&destination=La+Jolla+Shores+Boat+Launch+Area,+La+Jolla,+CA+92037`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -71,8 +67,8 @@ export default function MapSection() {
       {/* Map Display & Tab Panel Arrangement */}
       <div className="w-full flex flex-col gap-4">
         
-        {/* Full-Width Interactive Google Maps Embed with custom aesthetic borders */}
-        <div className="rounded-[24px] overflow-hidden border-2 border-[#1D4E89]/15 relative shadow-inner h-[380px] w-full bg-[#E5E9F0]">
+        {/* Full-Width Interactive Google Maps Embed with no border radius */}
+        <div className="overflow-hidden border-2 border-[#1D4E89]/15 relative shadow-inner h-[380px] w-full bg-[#E5E9F0]">
           {!isLoaded && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-sky-50/50 z-20 gap-3">
               <div className="w-8 h-8 rounded-full border-4 border-[#00B4D8] border-t-transparent animate-spin" />
@@ -84,7 +80,7 @@ export default function MapSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: isLoaded ? 1 : 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full h-full"
+            className="w-full h-full overflow-hidden"
           >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1340.0543632468307!2d-117.25752945778848!3d32.85507310575798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dc03dbdfa27a85%3A0xe37a933ff22883ef!2sLa%20Jolla%20Shores%20Boat%20Launch%20Area!5e0!3m2!1sen!2sus!4v1717270000000!5m2!1sen!2sus"
@@ -100,8 +96,18 @@ export default function MapSection() {
             />
           </motion.div>
 
+          {/* Custom "Open in Maps" overlay — covers the native embed button which links to wrong location */}
+          <a
+            href="https://maps.app.goo.gl/wr7mCZKs9QFoXswi7"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute top-1.5 left-1.5 z-10 flex items-center gap-1.5 px-3 py-2 bg-white rounded-lg shadow-md font-sans text-sm font-semibold text-[#0077B6] hover:bg-gray-50 transition-colors"
+          >
+            <ExternalLink className="w-3.5 h-3.5" /> Open in Maps
+          </a>
+
           {/* Floated beach helper banner */}
-          <div className="absolute bottom-3 left-3 right-3 sm:right-auto bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-[#00B4D8]/25 z-10 font-sans text-[11px] sm:text-xs font-bold text-gray-700 flex flex-col gap-2 select-none max-w-sm">
+          <div className="absolute bottom-1.5 left-1.5 right-1.5 sm:right-auto bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-[#00B4D8]/25 z-10 font-sans text-[11px] sm:text-xs font-bold text-gray-700 flex flex-col gap-2 select-none max-w-sm">
             <div className="flex items-center gap-2.5">
               <MapPin className="w-4 h-4 text-[#D81B60] shrink-0 animate-bounce" />
               <span>
