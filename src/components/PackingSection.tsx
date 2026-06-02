@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Check, Luggage, Waves, Sparkles, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Waves, Sparkles, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BeachItem } from '../types';
 
@@ -7,7 +7,7 @@ export default function PackingSection() {
   const [items, setItems] = useState<BeachItem[]>([
     { id: '1', name: 'Boogie Board 🌊', packed: false, required: false, icon: '🏄‍♀️' },
     { id: '2', name: 'Sunscreen', packed: false, required: true, icon: '🧴' },
-    { id: '3', name: 'Warm Jacket or Hoodie for sunset breeze 🌅', packed: false, required: true, icon: '🧥' },
+    { id: '3', name: 'Warm Jacket or Hoodie for the evening breeze 🌅', packed: false, required: true, icon: '🧥' },
     { id: '4', name: 'Beach Towel', packed: false, required: true, icon: '🧣' },
     { id: '5', name: 'Swimwear', packed: false, required: true, icon: '🩳' },
     { id: '6', name: 'A dry change of clothes', packed: false, required: true, icon: '👕' },

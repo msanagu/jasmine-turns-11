@@ -1,24 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Phone,
-  Flame,
-  Waves,
-  Compass,
-  Sun,
-  MessageSquare,
-  Heart,
-  Award,
-  Share2,
-  ArrowRight,
-  Info,
-  Gift,
-  Volume2,
-  VolumeX,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { Phone, Heart, Award, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { motion } from 'motion/react';
 import BeachGraphics from './components/BeachGraphics';
 import SoundGenerator, { SoundGeneratorHandle } from './components/SoundGenerator';
 import PackingSection from './components/PackingSection';
@@ -78,20 +60,6 @@ export default function App() {
     const interval = setInterval(calculateCountdown, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: "Jasmine's 11th Beach Birthday Bash Invite! 🎉",
-        text: "Join us for a beach birthday bash on Friday, June 12th at La Jolla Shores (just north of the boat launch)!",
-        url: window.location.href,
-      }).catch(console.error);
-    } else {
-      // Fallback
-      navigator.clipboard.writeText(window.location.href);
-      alert("Invitation link copied to clipboard! Share it with your friends.");
-    }
-  };
 
   // Google Calendar integration template link
   const calendarLink = "https://www.google.com/calendar/render?action=TEMPLATE&text=Jasmine's+Beach+Birthday+Bash+🎉&dates=20260612T190000Z/20260613T030000Z&details=Join+us+for+a+beach+birthday+bash!+Jasmine+turns+11+🎉++Bring+boogie+boards+if+you+have+them+🌊.+Contact+Mary+to+RSVP+949-291-2504&location=La+Jolla+Shores+Beach,+just+north+of+the+boat+launch,+La+Jolla,+CA+92037";
@@ -250,7 +218,7 @@ export default function App() {
                 }}
                 className="font-sans text-gray-600 text-base sm:text-lg lg:text-xl mt-6 lg:mt-8 leading-relaxed lg:leading-relaxed antialiased"
               >
-                Jasmine is turning <strong>11</strong> 🎉! We're celebrating with a sunny afternoon filled with splashing waves, beach games, burger grilling, and melting s'mores at sunset. Bring your boogie boards and join our beach squad directly next to the waves!
+                Jasmine is turning <strong>11</strong> 🎉! We're celebrating with a sunny afternoon filled with splashing waves, beach games, burger grilling, and making s'mores. Bring your boogie boards and join our beach squad directly next to the waves!
               </motion.p>
             </div>
 
@@ -330,8 +298,8 @@ export default function App() {
               </div>
               <div className="flex-1 min-w-0">
                 <h5 className="font-sans font-bold text-xs text-[#0077B6] uppercase tracking-widest leading-none">Friday • June</h5>
-                <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">12:00 PM — Sunset</p>
-                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Burgers & s'mores on campfire</p>
+                <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">12:00 PM — 8:00 PM</p>
+                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Boogie boarding, burgers & s'mores!</p>
               </div>
             </div>
             <a 
@@ -364,7 +332,7 @@ export default function App() {
               <div className="flex-1 min-w-0">
                 <h5 className="font-sans font-bold text-xs text-[#0077B6] uppercase tracking-widest leading-none">The Spot</h5>
                 <p className="font-serif italic text-lg sm:text-xl md:text-2xl lg:text-lg xl:text-2xl text-[#023E8A] mt-1.5 font-bold leading-tight tracking-tight break-words">La Jolla Shores</p>
-                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Just North of Launch Area</p>
+                <p className="font-sans text-xs sm:text-sm text-gray-500 mt-1">Just north of boat launch area</p>
               </div>
             </div>
             <a 
@@ -465,7 +433,7 @@ export default function App() {
                   <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase">We've got you covered!</span>
                 </div>
                 <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed tracking-wide italic">
-                  We can't wait to play in the sand, ride the ocean waves on our boogie boards, and end the day with s'mores while watching a beautiful San Diego sunset! Burgers, buns, condiments, snacks, beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!
+                  We can't wait to play in the sand, ride the ocean waves on our boogie boards, and end the evening with s'mores around the campfire! Burgers, buns, condiments, snacks, beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!
                 </p>
               </div>
             </div>
