@@ -212,8 +212,8 @@ const SoundGenerator = forwardRef<SoundGeneratorHandle, {}>(function SoundGenera
             osc.frequency.setValueAtTime(freq, now + strumDelay);
 
             localGain.gain.setValueAtTime(0, now + strumDelay);
-            localGain.gain.linearRampToValueAtTime(0.12, now + strumDelay + 0.015);
-            localGain.gain.exponentialRampToValueAtTime(0.0001, now + strumDelay + 1.2);
+            localGain.gain.linearRampToValueAtTime(0.38, now + strumDelay + 0.015);
+            localGain.gain.exponentialRampToValueAtTime(0.0001, now + strumDelay + 1.4);
 
             osc.connect(localGain);
             localGain.connect(melodyGain);

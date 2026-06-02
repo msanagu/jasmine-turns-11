@@ -41,23 +41,19 @@ export default function App() {
   const soundRef = useRef<SoundGeneratorHandle>(null);
   const [isMuted, setIsMuted] = useState(false);
 
-  // Auto-start waves + steel drums on first user interaction
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      soundRef.current?.startDefault();
-    };
-    document.addEventListener('click', handleFirstInteraction, { once: true });
-    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
-    return () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-    };
-  }, []);
+  const [audioStarted, setAudioStarted] = useState(false);
 
-  const handleMuteToggle = () => {
-    const next = !isMuted;
-    setIsMuted(next);
-    soundRef.current?.setMuted(next);
+  const handleAudioButton = () => {
+    if (!audioStarted) {
+      soundRef.current?.startDefault();
+      soundRef.current?.setMuted(false);
+      setAudioStarted(true);
+      setIsMuted(false);
+    } else {
+      const next = !isMuted;
+      setIsMuted(next);
+      soundRef.current?.setMuted(next);
+    }
   };
 
   useEffect(() => {
@@ -114,15 +110,19 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Mute toggle — tertiary, icon only */}
+            {/* Beach vibes audio button — icon only, expands label on hover */}
             <button
-              onClick={handleMuteToggle}
-              title={isMuted ? 'Unmute beach sounds' : 'Mute beach sounds'}
-              className="p-2 rounded-xl text-[#0077B6]/70 hover:text-[#0077B6] hover:bg-[#CAF0F8] transition-all"
+              onClick={handleAudioButton}
+              className={`group flex items-center gap-0 hover:gap-1.5 px-2 hover:px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 hover:bg-[#CAF0F8] ${
+                isMuted ? 'text-gray-400 hover:text-[#0077B6]' : 'text-[#0077B6]/70 hover:text-[#0077B6]'
+              }`}
             >
               {isMuted
-                ? <VolumeX className="w-4 h-4" />
-                : <Volume2 className="w-4 h-4" />}
+                ? <VolumeX className="w-4 h-4 shrink-0" />
+                : <Volume2 className="w-4 h-4 shrink-0" />}
+              <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-24 transition-all duration-200">
+                {!audioStarted ? 'Beach Vibes' : isMuted ? 'Unmute' : 'Mute'}
+              </span>
             </button>
 
             {/* Contact Mary — secondary, outlined */}
