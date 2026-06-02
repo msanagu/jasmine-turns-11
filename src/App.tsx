@@ -203,7 +203,7 @@ export default function App() {
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
                 }}
-                className="font-sans text-[#1D4E89]/85 text-base sm:text-lg lg:text-xl mt-6 lg:mt-8 leading-relaxed lg:leading-relaxed antialiased"
+                className="font-sans text-gray-600 text-base sm:text-lg lg:text-xl mt-6 lg:mt-8 leading-relaxed lg:leading-relaxed antialiased"
               >
                 Jasmine is turning <strong>11</strong> 🎉! We're celebrating with a sunny afternoon filled with splashing waves, beach games, burger grilling, and melting s'mores at sunset. Bring your boogie boards and join our beach squad directly next to the waves!
               </motion.p>
@@ -418,16 +418,16 @@ export default function App() {
               
               {/* Note card styling matching Artistic Flair */}
               <div className="bg-white p-6 rounded-[32px] border-2 border-[#00B4D8]/25 flex-1 flex flex-col gap-3 relative shadow-2xl rotate-[-1deg]">
-                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#FFD700] rounded-full flex items-center justify-center shadow-lg">
+                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#fff7ca] rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-xl">🤙</span>
                 </div>
                 
                 <div className="flex items-center gap-2">
                   <Award className="text-[#0077B6] w-5 h-5" />
-                  <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase">Mary & Jasmine's Note</span>
+                  <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase">We've got you covered!</span>
                 </div>
-                <p className="font-sans text-sm sm:text-base text-[#1D4E89]/85 leading-relaxed tracking-wide italic">
-                  "We can't wait to play in the sand, ride the ocean waves on our boogie boards, and end the day with hot melting s'mores from our Coleman camp stove while watching a beautiful San Diego sunset! Burgers, buns, condiments, chips, soft beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!"
+                <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed tracking-wide italic">
+                  We can't wait to play in the sand, ride the ocean waves on our boogie boards, and end the day with hot melting s'mores from our Coleman camp stove while watching a beautiful San Diego sunset! Burgers, buns, condiments, snacks, beverages, s'mores, and cooking skewers are fully covered by us. See you on Friday!
                 </p>
               </div>
             </div>
@@ -448,7 +448,7 @@ export default function App() {
               <h3 className="font-sans font-black text-2xl text-[#1D4E89] tracking-tight leading-none mb-2">
                 Jasmine's 11th Birthday Wishlist
               </h3>
-              <p className="font-sans text-xs md:text-sm text-[#1D4E89]/80 leading-relaxed">
+              <p className="font-sans text-xs md:text-sm text-gray-600 leading-relaxed">
                 If you feel inclined to send a birthday gift, they can be ordered online and delivered straight to Jasmine's home! This saves you the worry of protecting beautifully wrapped gifts from the fine beach sand or lugging packages across the shore. No gifts are expected physically at the beach—your joyous company is our biggest treat!
               </p>
             </div>
@@ -481,15 +481,10 @@ export default function App() {
 
       {/* Styled Footer */}
       <footer className="mt-12 bg-[#FDF6E3] border-t border-[#1D4E89]/10 py-8 text-center text-xs text-gray-500 relative z-30 select-none">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 font-sans font-medium text-[#1D4E89]">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-[#0077B6] fill-[#0077B6]" />
-            <span>for Jasmine's 11th Beach Birthday Bash!</span>
-          </div>
-          <div className="font-sans text-[11px] text-[#1D4E89]/60">
-            © 2026 site made with love by mama sanagu
-          </div>
+        <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-1.5 font-sans font-medium text-gray-500">
+          <span>Crafted with</span>
+          <Heart className="w-3.5 h-3.5 text-[#0077B6] fill-[#0077B6]" />
+          <span>for Jasmine's 11th Beach Birthday Bash by Mama Sanagu.</span>
         </div>
       </footer>
     </div>

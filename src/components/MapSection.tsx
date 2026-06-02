@@ -30,7 +30,7 @@ export default function MapSection() {
           <h3 className="font-sans font-black text-2xl sm:text-3xl text-[#1D4E89] tracking-tight leading-none mb-1">
             Where is Jasmine's Beach Spot?
           </h3>
-          <p className="font-sans text-sm text-[#1D4E89]/85 leading-relaxed">
+          <p className="font-sans text-sm text-gray-500 leading-relaxed">
             La Jolla Shores, San Diego, CA (just north of the boat launch). Double click map to zoom!
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function MapSection() {
 
           <a
             id="open-native-maps"
-            href={`https://www.google.com/maps/search/?api=1&query=La+Jolla+Shores+Boat+Launch+Area`}
+            href="https://maps.app.goo.gl/wr7mCZKs9QFoXswi7"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-1.5 px-5 py-3 bg-[#E0F2FE] hover:bg-[#0077B6] text-[#0077B6] hover:text-white font-sans font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-xs hover:scale-[1.01] border-2 border-[#00B4D8]/20 text-center"
@@ -101,7 +101,7 @@ export default function MapSection() {
           </motion.div>
 
           {/* Floated beach helper banner */}
-          <div className="absolute bottom-3 left-3 right-3 sm:right-auto bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-[#00B4D8]/25 z-10 font-sans text-[11px] sm:text-xs font-bold text-[#1D4E89] flex flex-col gap-2 select-none max-w-sm">
+          <div className="absolute bottom-3 left-3 right-3 sm:right-auto bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-[#00B4D8]/25 z-10 font-sans text-[11px] sm:text-xs font-bold text-gray-700 flex flex-col gap-2 select-none max-w-sm">
             <div className="flex items-center gap-2.5">
               <MapPin className="w-4 h-4 text-[#D81B60] shrink-0 animate-bounce" />
               <span>
@@ -114,7 +114,7 @@ export default function MapSection() {
                 <span className="text-[10px] sm:text-xs leading-none">👋</span>
               </div>
               <span>
-                <span className="text-[#B5179E] font-black">Drop-off Spot:</span> The end of Avenida De La Playa
+                <span className="text-[#8f117c] font-black">Drop-off Spot:</span> The end of Avenida De La Playa
               </span>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function MapSection() {
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#D81B60]" />
           <h4 className="font-sans font-black text-base sm:text-lg text-[#1D4E89] uppercase tracking-wider">
-            🚗 Essential Arrival, Parking & Safety Guide (Save This!)
+            🚗 Essential Arrival, Parking & Safety Guide
           </h4>
         </div>
 
@@ -143,7 +143,7 @@ export default function MapSection() {
                 <span className="font-sans font-bold text-sm text-[#023E8A] block mt-0.5">Free Street Parking</span>
               </div>
             </div>
-            <p className="font-sans text-xs sm:text-xs text-[#1D4E89]/85 leading-relaxed">
+            <p className="font-sans text-xs sm:text-xs text-gray-600 leading-relaxed">
               There is free street parking available along the adjacent residential streets and Camino Del Oro if parents wish to stay and join us for beach activities! Arriving slightly early to secure street parking is highly recommended due to the beautiful weather.
             </p>
           </div>
@@ -152,14 +152,14 @@ export default function MapSection() {
           <div className="bg-[#FAF5FF]/40 border-2 border-[#D81B60]/15 rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden group hover:border-[#D81B60]/35 transition-all shadow-3xs">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white text-[#D81B60] flex items-center justify-center border border-[#D81B60]/20 shadow-xs shrink-0 select-none">
-                <MapPin className="w-5 h-5 text-[#D81B60]" />
+                <MapPin className="w-5 h-5 text-[#ca5ab9]" />
               </div>
               <div>
-                <span className="font-sans font-black text-[9px] text-[#D81B60] uppercase tracking-wide block leading-none">Option 2</span>
-                <span className="font-sans font-bold text-sm text-[#B5179E] block mt-0.5">Avenida de la Playa Drop-off</span>
+                <span className="font-sans font-black text-[9px] text-[#ca5ab9] uppercase tracking-wide block leading-none">Option 2</span>
+                <span className="font-sans font-bold text-sm text-[#8f117c] block mt-0.5">Avenida de la Playa Drop-off</span>
               </div>
             </div>
-            <p className="font-sans text-xs sm:text-xs text-[#1D4E89]/85 leading-relaxed">
+            <p className="font-sans text-xs sm:text-xs text-gray-600 leading-relaxed">
               Drop-off and pick-up instructions are set for the end of Avenida de la Playa. If dropping off kids, simply park temporarily or pull right up to the end of the street—we will meet you right there and coordinate walking kids safely to the sand spot!
             </p>
           </div>
@@ -168,14 +168,14 @@ export default function MapSection() {
           <div className="bg-[#D8F3DC]/35 border-2 border-[#2D6A4F]/25 rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden group hover:border-[#2D6A4F]/50 transition-all shadow-3xs">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white text-[#2D6A4F] flex items-center justify-center border border-[#2D6A4F]/20 shadow-xs shrink-0 select-none">
-                <Shield className="w-5 h-5 text-[#2D6A4F]" />
+                <Shield className="w-5 h-5 text-[#0e804d]" />
               </div>
               <div>
-                <span className="font-sans font-black text-[9px] text-[#2D6A4F] uppercase tracking-wide block leading-none">Facilities</span>
-                <span className="font-sans font-bold text-sm text-[#1B4332] block mt-0.5">Amenities & Safety</span>
+                <span className="font-sans font-black text-[9px] text-[#0e804d] uppercase tracking-wide block leading-none">Facilities</span>
+                <span className="font-sans font-bold text-sm text-[#084736] block mt-0.5">Amenities & Safety</span>
               </div>
             </div>
-            <p className="font-sans text-xs sm:text-xs text-[#1D4E89]/85 leading-relaxed">
+            <p className="font-sans text-xs sm:text-xs text-gray-600 leading-relaxed">
               Clean restrooms, drinking fountains, and outdoor rinse-off showers are active at Kellogg Park right next to the beach boardwalk. There are also active San Diego lifeguard towers stationed directly beside our boat launch spot to ensure maximum safety.
             </p>
           </div>

@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, BookOpen, Check, Trash2, Send, Flame } from 'lucide-react';
+import { Calendar, Check, Trash2, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { db } from '../firebase';
 import { RSVP } from '../types';
 
-const INITIAL_RSVPS: RSVP[] = [
-  {
-    id: 'seed-1',
-    name: 'Jasmine (Birthday Girl 👑)',
-    attending: true,
-    bringingBoogieBoard: true,
-    boogieBoardCount: 2,
-    avatarStyle: 'surfboard',
-    timestamp: 'June 1, 2026',
-    message: "Can't wait to catch some awesome waves and eat lots of s'mores! 🌊🍰"
-  },
-];
+const SEED_RSVP: RSVP = {
+  id: 'seed-1',
+  name: 'Jasmine (Birthday Girl 👑)',
+  attending: true,
+  bringingBoogieBoard: true,
+  boogieBoardCount: 2,
+  avatarStyle: 'surfboard',
+  timestamp: 'Jun 1, 2026',
+  message: "Can't wait to catch some awesome waves and eat lots of s'mores! 🌊🍰",
+};
 
 const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
   surfboard: '🏄‍♀️',
@@ -36,51 +45,42 @@ export default function RsvpSection() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('jasmine_beach_bash_rsvps');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        const migrated = parsed.map((item: any) => ({
-          ...item,
-          attending: item.attending !== undefined ? item.attending : true,
-          bringingBoogieBoard: item.bringingBoogieBoard !== undefined ? item.bringingBoogieBoard : (item.boogieBoardCount > 0),
-          boogieBoardCount: item.boogieBoardCount !== undefined ? item.boogieBoardCount : (item.bringingBoogieBoard ? 1 : 0)
-        }));
-        setRsvps(migrated);
-      } catch (e) {
-        setRsvps(INITIAL_RSVPS);
-      }
-    } else {
-      setRsvps(INITIAL_RSVPS);
-      localStorage.setItem('jasmine_beach_bash_rsvps', JSON.stringify(INITIAL_RSVPS));
-    }
+    const q = query(collection(db, 'rsvps'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const firestoreRsvps: RSVP[] = snapshot.docs.map((d) => {
+        const data = d.data();
+        return {
+          id: d.id,
+          name: data.name,
+          attending: data.attending,
+          bringingBoogieBoard: data.bringingBoogieBoard,
+          boogieBoardCount: data.boogieBoardCount,
+          avatarStyle: data.avatarStyle,
+          timestamp: data.timestamp,
+          message: data.message,
+        };
+      });
+      setRsvps(firestoreRsvps);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const saveRsvps = (list: RSVP[]) => {
-    setRsvps(list);
-    localStorage.setItem('jasmine_beach_bash_rsvps', JSON.stringify(list));
-  };
-
-  const handleRsvp = (e: React.FormEvent) => {
+  const handleRsvp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     const actualCount = attending ? boogieBoardCount : 0;
-    const newRsvp: RSVP = {
-      id: Date.now().toString(),
+    await addDoc(collection(db, 'rsvps'), {
       name: name.trim(),
-      attending: attending,
+      attending,
       bringingBoogieBoard: actualCount > 0,
       boogieBoardCount: actualCount,
       avatarStyle: avatar,
       timestamp: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
-      message: message.trim() ? message.trim() : undefined,
-    };
+      message: message.trim() || null,
+      createdAt: serverTimestamp(),
+    });
 
-    const updated = [newRsvp, ...rsvps];
-    saveRsvps(updated);
-    
-    // Reset form & show submission feedback
     setName('');
     setMessage('');
     setAttending(true);
@@ -90,19 +90,20 @@ export default function RsvpSection() {
     setTimeout(() => setIsSubmitted(false), 4000);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (id.startsWith('seed-')) {
       alert("Can't remove the party hosts list! Feel free to add and delete your own RSVPs.");
       return;
     }
-    const filtered = rsvps.filter(item => item.id !== id);
-    saveRsvps(filtered);
+    await deleteDoc(doc(db, 'rsvps', id));
   };
 
+  const displayRsvps = [SEED_RSVP, ...rsvps];
+
   const totals = {
-    attending: rsvps.filter(r => r.attending !== false).length,
-    regrets: rsvps.filter(r => r.attending === false).length,
-    boogieBoards: rsvps.reduce((sum, r) => sum + (r.attending ? (r.boogieBoardCount || 0) : 0), 0),
+    attending: displayRsvps.filter(r => r.attending !== false).length,
+    regrets: displayRsvps.filter(r => r.attending === false).length,
+    boogieBoards: displayRsvps.reduce((sum, r) => sum + (r.attending ? (r.boogieBoardCount || 0) : 0), 0),
   };
 
   return (
@@ -116,41 +117,23 @@ export default function RsvpSection() {
           <h3 className="font-sans font-black text-2xl text-[#1D4E89] tracking-tight leading-none mb-1">
             {attending ? "Count Me In!" : "Send My Regrets"}
           </h3>
-          <p className="font-sans text-xs text-[#1D4E89]/75 mb-3.5">
+          <p className="font-sans text-xs text-gray-500 mb-3.5">
             {attending 
               ? "Let Jasmine and Mary know if you're coming to the beach birthday bash!" 
               : "Let Jasmine and Mary know you won't be able to make it (leave a sweet note!)."}
           </p>
 
-          {/* Call / Text Direct RSVP Section */}
-          <div className="flex flex-col gap-1.5 bg-[#CAF0F8]/30 rounded-2xl p-3.5 border border-[#00B4D8]/15 shadow-2xs">
-            <span className="font-sans font-black text-[10px] text-[#0077B6] uppercase tracking-wider block">
-              📞 OR RSVP BY CALL / TEXT
-            </span>
-            <span className="font-sans text-[11px] text-gray-500 block leading-normal">
-              Prefer direct contact? You can call or text Mary at any time!
-            </span>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <a
-                href="tel:9492912504"
-                className="py-1.5 bg-white hover:bg-gray-50 text-[11px] font-sans font-bold text-center border border-[#0077B6]/20 text-[#0077B6] rounded-lg transition-all shadow-3xs flex items-center justify-center gap-1.5"
-              >
-                📞 Call Mary
-              </a>
-              <a
-                href="sms:9492912504?body=Hi Mary, I would love to RSVP for Jasmine's beach bash!"
-                className="py-1.5 bg-[#0096C7] hover:bg-[#0077B6] text-[11px] font-sans font-bold text-center text-white rounded-lg transition-all shadow-3xs flex items-center justify-center gap-1.5"
-              >
-                💬 Text Mary
-              </a>
-            </div>
-          </div>
+          {/* Call / Text note */}
+          <p className="font-sans text-[11px] text-gray-500 leading-relaxed bg-[#CAF0F8]/30 rounded-2xl p-3.5 border border-[#00B4D8]/15">
+            📞 Prefer to RSVP directly, or need to change an existing response? Call or text Mary at{' '}
+            <span className="font-bold text-[#0077B6] whitespace-nowrap">949-291-2504</span>.
+          </p>
         </div>
 
         <form onSubmit={handleRsvp} className="flex flex-col gap-5">
           {/* Are you attending Toggle */}
           <div className="flex flex-col gap-1.5">
-            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+            <label className="font-sans font-bold text-xs text-gray-600 block">
               Will you be attending?
             </label>
             <div className="grid grid-cols-2 gap-2 bg-[#CAF0F8]/20 p-1 rounded-xl border border-[#00B4D8]/10">
@@ -181,7 +164,7 @@ export default function RsvpSection() {
 
           {/* Guest Name input */}
           <div className="flex flex-col gap-1.5">
-            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+            <label className="font-sans font-bold text-xs text-gray-600 block">
               Guest Name
             </label>
             <input
@@ -196,7 +179,7 @@ export default function RsvpSection() {
 
           {/* Select Avatar emoji */}
           <div className="flex flex-col gap-1.5">
-            <span className="font-sans font-bold text-xs text-[#1D4E89]/80 block">
+            <span className="font-sans font-bold text-xs text-gray-600 block">
               Choose your Beach Badge / Icon
             </span>
             <div className="grid grid-cols-7 gap-1.5 bg-[#CAF0F8]/30 p-2 rounded-xl border border-[#00B4D8]/10">
@@ -221,7 +204,7 @@ export default function RsvpSection() {
 
           {/* Guest Message / Wish input */}
           <div className="flex flex-col gap-1.5">
-            <label className="font-sans font-bold text-xs text-[#1D4E89]/80 block flex justify-between">
+            <label className="font-sans font-bold text-xs text-gray-600 block flex justify-between">
               <span>{attending ? "Message or Wish (Optional)" : "Send a Wish to Jasmine! ✨"}</span>
               <span className="text-[10px] text-gray-400 font-normal">{message.length}/100</span>
             </label>
@@ -242,7 +225,7 @@ export default function RsvpSection() {
                   <span className="font-sans font-black text-xs text-[#0077B6] block">
                     Bringing Boogie Boards? 🌊
                   </span>
-                  <span className="font-sans text-[10px] text-[#005F73] leading-none block mt-0.5">
+                  <span className="font-sans text-[10px] text-gray-500 leading-none block mt-0.5">
                     Select how many boards your group can bring!
                   </span>
                 </div>
@@ -339,7 +322,7 @@ export default function RsvpSection() {
 
           <div className="grid grid-cols-1 gap-3 overflow-y-auto max-h-[360px] pr-1">
             <AnimatePresence initial={false}>
-              {rsvps.map(rsvp => (
+              {displayRsvps.map(rsvp => (
                 <motion.div
                   key={rsvp.id}
                   initial={{ opacity: 0, scale: 0.9, y: 10 }}
@@ -364,7 +347,7 @@ export default function RsvpSection() {
                         <p className={`font-sans text-xs italic mt-2 p-2.5 border rounded-xl break-words leading-relaxed shadow-2xs ${
                           rsvp.attending === false 
                             ? 'text-gray-500 bg-white/40 border-[#D81B60]/10' 
-                            : 'text-[#1D4E89]/85 bg-white/65 border-[#00B4D8]/10'
+                            : 'text-gray-600 bg-white/65 border-[#00B4D8]/10'
                         }`}>
                           "{rsvp.message}"
                         </p>

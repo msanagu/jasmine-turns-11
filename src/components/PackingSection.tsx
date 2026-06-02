@@ -44,7 +44,7 @@ export default function PackingSection() {
         <h3 className="font-sans font-black text-2xl text-[#1D4E89] tracking-tight leading-none mb-1">
           Are you beach ready?
         </h3>
-        <p className="font-sans text-sm text-[#1D4E89]/75">
+        <p className="font-sans text-sm text-gray-500">
           Click the recommended beach items below to pack them into your virtual beach bag!
         </p>
       </div>
@@ -76,7 +76,7 @@ export default function PackingSection() {
           </motion.div>
 
           <div className="text-center">
-            <h4 className="font-sans font-bold text-[#0077B6] text-sm">Your Beach Bag</h4>
+            <h4 className="font-sans font-bold text-gray-700 text-sm">Your Beach Bag</h4>
             <p className="font-sans text-xs text-[#0096C7] font-black mt-1 uppercase tracking-wider">
               {packedCount} / {items.length} Packed
             </p>
@@ -111,7 +111,7 @@ export default function PackingSection() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="text-[11px] font-bold text-[#1D4E89]/60"
+                  className="text-[11px] font-bold text-gray-500"
                 >
                   Keep packing! Let's hit the waves.
                 </motion.span>

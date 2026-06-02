@@ -33,27 +33,39 @@ export default function BeachGraphics() {
         </svg>
       </motion.div>
 
-      {/* Artistic Flair Wave footer layered curves */}
+      {/* Seamlessly tiling wave footer */}
       <div className="absolute bottom-0 left-0 right-0 h-24 overflow-hidden z-0">
-        {/* Layer 1 wave (0.5 opacity) */}
-        <motion.svg 
-          viewBox="0 0 1440 120" 
-          className="absolute bottom-0 w-[200%] h-full fill-[#00B4D8] opacity-35"
-          animate={{ x: [0, -1440] }}
-          transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+        {/* Layer 1: light wave, moves left */}
+        <motion.div
+          className="absolute inset-y-0 flex"
+          style={{ width: '200%' }}
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
         >
-          <path d="M0,64L48,64C96,64,192,64,288,58.7C384,53,480,43,576,42.7C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
-        </motion.svg>
+          {[0, 1].map(i => (
+            <svg key={i} viewBox="0 0 1440 96" preserveAspectRatio="none"
+              className="fill-[#00B4D8]/40 h-full shrink-0"
+              style={{ width: '50%' }}>
+              <path d="M0,60 C360,28 1080,92 1440,60 L1440,96 L0,96 Z" />
+            </svg>
+          ))}
+        </motion.div>
 
-        {/* Layer 2 wave (full opacity) */}
-        <motion.svg 
-          viewBox="0 0 1440 120" 
-          className="absolute bottom-[-5px] w-[200%] h-full fill-[#0077B6]"
-          animate={{ x: [-1440, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        {/* Layer 2: dark wave, moves right */}
+        <motion.div
+          className="absolute inset-y-0 flex"
+          style={{ width: '200%' }}
+          animate={{ x: ['-50%', '0%'] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
         >
-          <path d="M0,96L48,85.3C96,75,192,53,288,53.3C384,53,480,75,576,85.3C672,96,768,96,864,85.3C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
-        </motion.svg>
+          {[0, 1].map(i => (
+            <svg key={i} viewBox="0 0 1440 96" preserveAspectRatio="none"
+              className="fill-[#0077B6] h-full shrink-0"
+              style={{ width: '50%' }}>
+              <path d="M0,72 C400,42 1040,90 1440,72 L1440,96 L0,96 Z" />
+            </svg>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
