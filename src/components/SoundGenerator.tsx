@@ -1,27 +1,52 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Play, Square, Volume2, Music, Waves, Flame, Sun } from 'lucide-react';
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { Volume2, Music, Waves, Sun } from 'lucide-react';
 import { motion } from 'motion/react';
 
-type SoundMode = 'steeldrum' | 'campfire' | 'ukulele';
+type SoundMode = 'steeldrum' | 'ukulele';
 
-export default function SoundGenerator() {
+export interface SoundGeneratorHandle {
+  startDefault: () => void;
+  setMuted: (muted: boolean) => void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+const SoundGenerator = forwardRef<SoundGeneratorHandle, {}>(function SoundGenerator(_, ref) {
   const [isPlayingWaves, setIsPlayingWaves] = useState(false);
   const [isPlayingAmbience, setIsPlayingAmbience] = useState(false);
-  const [activeMode, setActiveMode] = useState<SoundMode>('steeldrum');
+  const [activeMode, setActiveMode] = useState<SoundMode>(() =>
+    Math.random() < 0.5 ? 'steeldrum' : 'ukulele'
+  );
   const [volume, setVolume] = useState(0.4);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const isMutedRef = useRef(false);
+  const isPlayingWavesRef = useRef(false);
+  const isPlayingAmbienceRef = useRef(false);
+
   const waveNodeRef = useRef<ScriptProcessorNode | null>(null);
   const waveGainRef = useRef<GainNode | null>(null);
-  const waveIntervalRef = useRef<any>(null);
-  
-  const melodyGainRef = useRef<GainNode | null>(null);
-  const ambientIntervalsRef = useRef<any[]>([]);
+  const waveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Initialize Audio Context on demand
+  const melodyGainRef = useRef<GainNode | null>(null);
+  const ambientIntervalsRef = useRef<ReturnType<typeof setInterval>[]>([]);
+
+  const setPlayingWaves = (v: boolean) => {
+    isPlayingWavesRef.current = v;
+    setIsPlayingWaves(v);
+  };
+  const setPlayingAmbience = (v: boolean) => {
+    isPlayingAmbienceRef.current = v;
+    setIsPlayingAmbience(v);
+  };
+
   const getAudioContext = () => {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const masterGain = audioCtxRef.current.createGain();
+      masterGain.gain.setValueAtTime(isMutedRef.current ? 0 : 1, audioCtxRef.current.currentTime);
+      masterGain.connect(audioCtxRef.current.destination);
+      masterGainRef.current = masterGain;
     }
     if (audioCtxRef.current.state === 'suspended') {
       audioCtxRef.current.resume();
@@ -29,20 +54,19 @@ export default function SoundGenerator() {
     return audioCtxRef.current;
   };
 
-  // Synthesize Ocean Waves using White/Pink noise approximation with ScriptProcessor
   const playWaves = () => {
     try {
       const ctx = getAudioContext();
-      
+      const masterGain = masterGainRef.current!;
+
       const bufferSize = 4096;
       const scriptNode = ctx.createScriptProcessor(bufferSize, 1, 1);
-      
+
       let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
       scriptNode.onaudioprocess = (e) => {
         const output = e.outputBuffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
           const white = Math.random() * 2 - 1;
-          // Pink noise filter approximation
           b0 = 0.99886 * b0 + white * 0.0555179;
           b1 = 0.99332 * b1 + white * 0.0750759;
           b2 = 0.96900 * b2 + white * 0.1538520;
@@ -60,9 +84,8 @@ export default function SoundGenerator() {
       filter.frequency.setValueAtTime(400, ctx.currentTime);
       filter.Q.setValueAtTime(1, ctx.currentTime);
 
-      // Modulate lowpass filter frequency to simulate incoming/outgoing waves!
       const modulator = () => {
-        if (!isPlayingWaves && waveGainRef.current === null) return;
+        if (waveGainRef.current === null) return;
         const now = ctx.currentTime;
         filter.frequency.cancelScheduledValues(now);
         filter.frequency.setValueAtTime(filter.frequency.value, now);
@@ -78,7 +101,7 @@ export default function SoundGenerator() {
 
       scriptNode.connect(filter);
       filter.connect(waveGain);
-      waveGain.connect(ctx.destination);
+      waveGain.connect(masterGain);
 
       waveNodeRef.current = scriptNode;
       waveGainRef.current = waveGain;
@@ -108,13 +131,13 @@ export default function SoundGenerator() {
     ambientIntervalsRef.current = [];
   };
 
-  // Play synthesized ambient atmosphere based on active mode
   const playAmbience = (mode: SoundMode) => {
     try {
       const ctx = getAudioContext();
+      const masterGain = masterGainRef.current!;
       const melodyGain = ctx.createGain();
       melodyGain.gain.setValueAtTime(volume * 0.5, ctx.currentTime);
-      melodyGain.connect(ctx.destination);
+      melodyGain.connect(masterGain);
       melodyGainRef.current = melodyGain;
 
       clearAmbientIntervals();
@@ -167,57 +190,12 @@ export default function SoundGenerator() {
 
         ambientIntervalsRef.current.push(interval);
 
-      } else if (mode === 'campfire') {
-        // High crisp spark pops
-        const crackleInterval = setInterval(() => {
-          if (Math.random() > 0.08) return;
-          const now = ctx.currentTime;
-          const osc = ctx.createOscillator();
-          const localGain = ctx.createGain();
-
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(1000 + Math.random() * 2500, now);
-
-          localGain.gain.setValueAtTime(0, now);
-          localGain.gain.linearRampToValueAtTime(0.012 + Math.random() * 0.015, now + 0.001);
-          localGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02 + Math.random() * 0.03);
-
-          osc.connect(localGain);
-          localGain.connect(melodyGain);
-
-          osc.start(now);
-          osc.stop(now + 0.08);
-        }, 50);
-
-        // Low flame wood thuds
-        const thudInterval = setInterval(() => {
-          if (Math.random() > 0.15) return;
-          const now = ctx.currentTime;
-          const osc = ctx.createOscillator();
-          const localGain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(55 + Math.random() * 45, now);
-
-          localGain.gain.setValueAtTime(0, now);
-          localGain.gain.linearRampToValueAtTime(0.06 + Math.random() * 0.05, now + 0.01);
-          localGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-          osc.connect(localGain);
-          localGain.connect(melodyGain);
-
-          osc.start(now);
-          osc.stop(now + 0.25);
-        }, 280);
-
-        ambientIntervalsRef.current.push(crackleInterval, thudInterval);
-
       } else if (mode === 'ukulele') {
         const chords = [
-          [392.00, 261.63, 329.63, 440.00], // C major
-          [440.00, 261.63, 349.23, 440.00], // F major
-          [392.00, 293.66, 392.00, 493.88], // G major
-          [440.00, 261.63, 329.63, 440.00], // Am
+          [392.00, 261.63, 329.63, 440.00],
+          [440.00, 261.63, 349.23, 440.00],
+          [392.00, 293.66, 392.00, 493.88],
+          [440.00, 261.63, 329.63, 440.00],
         ];
         let chordIdx = 0;
 
@@ -262,30 +240,51 @@ export default function SoundGenerator() {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    startDefault() {
+      if (!isPlayingWavesRef.current) {
+        playWaves();
+        setPlayingWaves(true);
+      }
+      if (!isPlayingAmbienceRef.current) {
+        playAmbience(activeMode);
+        setPlayingAmbience(true);
+      }
+    },
+    setMuted(muted: boolean) {
+      isMutedRef.current = muted;
+      if (masterGainRef.current) {
+        masterGainRef.current.gain.setValueAtTime(
+          muted ? 0 : 1,
+          masterGainRef.current.context.currentTime
+        );
+      }
+    },
+  }));
+
   const toggleWaves = () => {
     if (isPlayingWaves) {
       stopWaves();
-      setIsPlayingWaves(false);
+      setPlayingWaves(false);
     } else {
       playWaves();
-      setIsPlayingWaves(true);
+      setPlayingWaves(true);
     }
   };
 
   const toggleAmbience = () => {
     if (isPlayingAmbience) {
       stopAmbience();
-      setIsPlayingAmbience(false);
+      setPlayingAmbience(false);
     } else {
       playAmbience(activeMode);
-      setIsPlayingAmbience(true);
+      setPlayingAmbience(true);
     }
   };
 
   const handleModeChange = (mode: SoundMode) => {
     setActiveMode(mode);
     if (isPlayingAmbience) {
-      // Hot swap the playing audio pattern immediately!
       stopAmbience();
       playAmbience(mode);
     }
@@ -300,7 +299,6 @@ export default function SoundGenerator() {
     }
   }, [volume]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       stopWaves();
@@ -309,7 +307,7 @@ export default function SoundGenerator() {
   }, []);
 
   return (
-    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-[32px] p-6 max-w-sm mx-auto flex flex-col gap-4 rotate-[-0.5deg]">
+    <div className="bg-white/90 shadow-2xl border-2 border-[#00B4D8]/25 rounded-4xl p-6 max-w-sm mx-auto flex flex-col gap-4 rotate-[-0.5deg]">
       <div className="flex items-center gap-3">
         <div className="p-2.5 bg-[#CAF0F8] rounded-xl text-[#0077B6]">
           <Music className="w-5 h-5 animate-pulse" />
@@ -320,14 +318,13 @@ export default function SoundGenerator() {
         </div>
       </div>
 
-      {/* Primary Toggles */}
       <div className="grid grid-cols-2 gap-3">
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={toggleWaves}
           className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold font-sans transition-all cursor-pointer ${
-            isPlayingWaves 
-              ? 'bg-[#CAF0F8] border-[#00B4D8] text-[#005F73] shadow-md font-sans' 
+            isPlayingWaves
+              ? 'bg-[#CAF0F8] border-[#00B4D8] text-[#005F73] shadow-md font-sans'
               : 'bg-white/60 hover:bg-white border-gray-200 text-[#1D4E89]'
           }`}
         >
@@ -339,8 +336,8 @@ export default function SoundGenerator() {
           whileTap={{ scale: 0.95 }}
           onClick={toggleAmbience}
           className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold font-sans transition-all cursor-pointer ${
-            isPlayingAmbience 
-              ? 'bg-[#CAF0F8] border-[#00B4D8] text-[#005F73] shadow-md' 
+            isPlayingAmbience
+              ? 'bg-[#CAF0F8] border-[#00B4D8] text-[#005F73] shadow-md'
               : 'bg-white/60 hover:bg-white border-gray-200 text-[#1D4E89]'
           }`}
         >
@@ -349,18 +346,17 @@ export default function SoundGenerator() {
         </motion.button>
       </div>
 
-      {/* Multi-sound choice category selector */}
       <div className="flex flex-col gap-1.5 mt-1">
         <span className="font-sans font-bold text-[10px] uppercase tracking-wider text-gray-500">
           Atmosphere Instrument
         </span>
-        <div className="grid grid-cols-3 gap-1.5 bg-[#CAF0F8]/30 p-1.5 rounded-xl border border-[#00B4D8]/10 text-center">
+        <div className="grid grid-cols-2 gap-1.5 bg-[#CAF0F8]/30 p-1.5 rounded-xl border border-[#00B4D8]/10 text-center">
           <button
             type="button"
             onClick={() => handleModeChange('steeldrum')}
             className={`py-1.5 px-1 rounded-lg text-[10px] font-sans font-black transition-all cursor-pointer ${
-              activeMode === 'steeldrum' 
-                ? 'bg-white text-[#005F73] shadow-xs border border-[#00B4D8]/10' 
+              activeMode === 'steeldrum'
+                ? 'bg-white text-[#005F73] shadow-xs border border-[#00B4D8]/10'
                 : 'text-gray-500 opacity-80 hover:opacity-100'
             }`}
           >
@@ -368,21 +364,10 @@ export default function SoundGenerator() {
           </button>
           <button
             type="button"
-            onClick={() => handleModeChange('campfire')}
-            className={`py-1.5 px-1 rounded-lg text-[10px] font-sans font-black transition-all cursor-pointer ${
-              activeMode === 'campfire' 
-                ? 'bg-white text-[#005F73] shadow-xs border border-[#00B4D8]/10' 
-                : 'text-gray-500 opacity-80 hover:opacity-100'
-            }`}
-          >
-            🔥 Bonfire
-          </button>
-          <button
-            type="button"
             onClick={() => handleModeChange('ukulele')}
             className={`py-1.5 px-1 rounded-lg text-[10px] font-sans font-black transition-all cursor-pointer ${
-              activeMode === 'ukulele' 
-                ? 'bg-white text-[#005F73] shadow-xs border border-[#00B4D8]/10' 
+              activeMode === 'ukulele'
+                ? 'bg-white text-[#005F73] shadow-xs border border-[#00B4D8]/10'
                 : 'text-gray-500 opacity-80 hover:opacity-100'
             }`}
           >
@@ -407,4 +392,6 @@ export default function SoundGenerator() {
       )}
     </div>
   );
-}
+});
+
+export default SoundGenerator;

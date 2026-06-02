@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Phone, 
-  Flame, 
-  Waves, 
-  Compass, 
-  Sun, 
-  MessageSquare, 
-  Heart, 
-  Award, 
-  Share2, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Phone,
+  Flame,
+  Waves,
+  Compass,
+  Sun,
+  MessageSquare,
+  Heart,
+  Award,
+  Share2,
   ArrowRight,
   Info,
-  Gift
+  Gift,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import BeachGraphics from './components/BeachGraphics';
-import SoundGenerator from './components/SoundGenerator';
+import SoundGenerator, { SoundGeneratorHandle } from './components/SoundGenerator';
 import PackingSection from './components/PackingSection';
 import RsvpSection from './components/RsvpSection';
 import MapSection from './components/MapSection';
@@ -35,6 +37,28 @@ export default function App() {
     seconds: 0,
     isOver: false
   });
+
+  const soundRef = useRef<SoundGeneratorHandle>(null);
+  const [isMuted, setIsMuted] = useState(false);
+
+  // Auto-start waves + steel drums on first user interaction
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      soundRef.current?.startDefault();
+    };
+    document.addEventListener('click', handleFirstInteraction, { once: true });
+    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, []);
+
+  const handleMuteToggle = () => {
+    const next = !isMuted;
+    setIsMuted(next);
+    soundRef.current?.setMuted(next);
+  };
 
   useEffect(() => {
     const calculateCountdown = () => {
@@ -83,18 +107,39 @@ export default function App() {
 
       {/* Floating Header */}
       <header className="sticky top-0 z-50 bg-[#FDF6E3]/80 backdrop-blur-md border-b border-[#1D4E89]/10">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl">🏄‍♀️</span>
-            <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase">Jasmine turns 11!</span>
+            <span className="font-sans font-black tracking-wider text-[#0077B6] text-sm uppercase hidden sm:block">Jasmine turns 11!</span>
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Mute toggle — tertiary, icon only */}
+            <button
+              onClick={handleMuteToggle}
+              title={isMuted ? 'Unmute beach sounds' : 'Mute beach sounds'}
+              className="p-2 rounded-xl text-[#0077B6]/70 hover:text-[#0077B6] hover:bg-[#CAF0F8] transition-all"
+            >
+              {isMuted
+                ? <VolumeX className="w-4 h-4" />
+                : <Volume2 className="w-4 h-4" />}
+            </button>
+
+            {/* Contact Mary — secondary, outlined */}
             <a
               href="tel:9492912504"
-              className="px-4 py-1.5 bg-[#0096C7] hover:bg-[#00b4d8] text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 border-2 border-[#00B4D8]/50 hover:border-[#0096C7] text-[#0077B6] hover:bg-[#CAF0F8] text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
             >
-              <Phone className="w-3.5 h-3.5" /> Contact Mary
+              <Phone className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Contact Mary</span>
+            </a>
+
+            {/* RSVP — primary CTA, most prominent */}
+            <a
+              href="#rsvp_board_section"
+              className="px-4 py-2 bg-linear-to-r from-[#0096C7] to-[#0077B6] hover:from-[#0077B6] hover:to-[#023E8A] text-white text-xs font-black rounded-xl shadow-lg flex items-center gap-1.5 transition-all hover:shadow-xl hover:scale-[1.02]"
+            >
+              RSVP Now <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -414,7 +459,7 @@ export default function App() {
           {/* synthesized sound engine box */}
           <div className="lg:col-span-4 h-full flex flex-col justify-between">
             <div className="flex flex-col gap-6 h-full">
-              <SoundGenerator />
+              <SoundGenerator ref={soundRef} />
               
               {/* Note card styling matching Artistic Flair */}
               <div className="bg-white p-6 rounded-[32px] border-2 border-[#00B4D8]/25 flex-1 flex flex-col gap-3 relative shadow-2xl rotate-[-1deg]">
