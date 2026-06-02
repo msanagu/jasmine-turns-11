@@ -351,7 +351,7 @@ export default function RsvpSection() {
             </h4>
             <div className="flex gap-2">
               <span className="font-sans font-mono text-[10px] text-[#0077B6] font-bold bg-[#CAF0F8] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
-                {totals.attending} Attending
+                {totals.adults + totals.children} Attending
               </span>
               <span className="font-sans font-mono text-[10px] text-[#D81B60] font-bold bg-[#FCE7F3] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
                 {totals.regrets} Regrets
