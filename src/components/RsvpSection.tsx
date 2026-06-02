@@ -14,14 +14,20 @@ import { RSVP } from '../types';
 
 
 const AVATAR_MAP: Record<RSVP['avatarStyle'], string> = {
-  surfboard: '🏄‍♀️',
+  shark: '🦈',
   volleyball: '🏐',
-  sunglasses: '🕶️',
-  sun: '☀️',
+  crab: '🦀',
+  sunset: '🌅',
   shell: '🐚',
   umbrella: '🏖️',
   palm: '🌴',
-  shaka: '🤙',
+  coral: '🪸',
+  waves: '🌊',
+  dolphin: '🐬',
+  hibiscus: '🌺',
+  drink: '🍹',
+  swimsuit: '🩱',
+  pineapple: '🍍',
 };
 
 export default function RsvpSection() {
@@ -32,7 +38,7 @@ export default function RsvpSection() {
   const [adultCount, setAdultCount] = useState(1);
   const [childCount, setChildCount] = useState(0);
   const [boogieBoardCount, setBoogieBoardCount] = useState(0);
-  const [avatar, setAvatar] = useState<RSVP['avatarStyle']>('surfboard');
+  const [avatar, setAvatar] = useState<RSVP['avatarStyle']>('shark');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
@@ -82,7 +88,7 @@ export default function RsvpSection() {
     setAdultCount(1);
     setChildCount(0);
     setBoogieBoardCount(0);
-    setAvatar('surfboard');
+    setAvatar('shark');
     setIsSubmitted(true);
     setTimeout(() => setIsSubmitted(false), 4000);
   };
