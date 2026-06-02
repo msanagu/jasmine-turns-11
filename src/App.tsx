@@ -113,7 +113,7 @@ export default function App() {
             {/* Beach vibes audio button — icon only, expands label on hover */}
             <button
               onClick={handleAudioButton}
-              className={`group flex items-center gap-0 hover:gap-1.5 px-2 hover:px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 hover:bg-[#CAF0F8] ${
+              className={`group flex items-center gap-0 hover:gap-1.5 px-2 hover:px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 border-2 border-transparent hover:border-[#00B4D8]/50 hover:bg-[#CAF0F8] ${
                 isMuted ? 'text-gray-400 hover:text-[#0077B6]' : 'text-[#0077B6]/70 hover:text-[#0077B6]'
               }`}
             >
@@ -128,7 +128,7 @@ export default function App() {
             {/* Contact Mary — secondary, outlined */}
             <a
               href="tel:9492912504"
-              className="px-3.5 py-1.5 border-2 border-[#00B4D8]/50 hover:border-[#0096C7] text-[#0077B6] hover:bg-[#CAF0F8] text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+              className="px-3.5 py-1.5 border-2 border-[#00B4D8]/50 hover:border-[#00B4D8]/50 text-[#0077B6] hover:bg-[#CAF0F8] text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
             >
               <Phone className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Contact Mary</span>
