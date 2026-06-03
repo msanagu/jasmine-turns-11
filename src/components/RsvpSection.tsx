@@ -412,9 +412,9 @@ export default function RsvpSection() {
           </div>
 
           {/* Plans Changed Notice */}
-          <div className="mt-2 pt-3 border-t border-[#00B4D8]/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left bg-[#CAF0F8]/10 p-2.5 rounded-xl">
-            <div className="font-sans text-[11px] text-gray-500 leading-normal flex items-center gap-2 justify-center sm:justify-start">
-              <span className="w-2 h-2 rounded-full bg-[#0077B6] animate-pulse shrink-0"></span>
+          <div className="mt-2 border border-[#00B4D8]/15 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#CAF0F8]/10 p-3 rounded-xl">
+            <div className="font-sans text-[11px] text-gray-500 leading-normal flex items-start gap-2 text-left">
+              <span className="w-2 h-2 mt-[5px] rounded-full bg-[#0077B6] animate-pulse shrink-0"></span>
               <span>
                 Plans changed? Text Mary at{' '}
                 <a href="sms:9492912504" className="underline font-bold text-[#0077B6] hover:text-[#005F73] inline-block whitespace-nowrap">
